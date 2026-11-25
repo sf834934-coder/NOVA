@@ -1,192 +1,146 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NOVA</title>
 <style>
+:root{color-scheme:dark;--bg:#0d1018;--panel:#171c29;--line:#2b3448;--text:#f4f6fb;--muted:#aab3c5;--accent:#8b7cff}
 *{box-sizing:border-box}
-body{
- margin:0;background:#10131c;color:#f4f5f8;
- font-family:Arial,sans-serif
-}
-header{
- padding:18px;text-align:center;
- border-bottom:1px solid #292e3b;
- background:#171b26;position:sticky;top:0;z-index:5
-}
-.logo{font-size:30px;font-weight:bold;color:#65aaff;letter-spacing:3px}
-.subtitle{font-size:12px;color:#929bb0;margin-top:5px}
-main{max-width:600px;margin:auto;padding:15px}
-.card{
- background:#1a1f2c;border:1px solid #2c3343;
- border-radius:16px;padding:15px;margin-bottom:14px
-}
-textarea{
- width:100%;resize:vertical;min-height:90px;
- background:#111622;color:white;border:1px solid #343b4d;
- border-radius:12px;padding:12px;font-size:16px
-}
-button{
- border:0;border-radius:10px;padding:10px 15px;
- cursor:pointer;font-size:15px
-}
-.primary{background:#438cff;color:white;font-weight:bold}
-.nav{display:flex;gap:8px;margin:15px 0}
-.nav button{flex:1;background:#252b39;color:#d7dbea}
-.nav button.active{background:#438cff;color:white}
-.post-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.avatar{
- width:40px;height:40px;border-radius:50%;
- background:#438cff;display:flex;align-items:center;
- justify-content:center;font-weight:bold
-}
-.name{font-weight:bold}
-.time{color:#8f98aa;font-size:12px;margin-top:4px}
-.post-text{font-size:16px;line-height:1.8;white-space:pre-wrap}
-.actions{display:flex;gap:8px;margin-top:12px}
-.actions button{background:#252b39;color:#e3e7f1}
-.actions button.liked{color:#ff6e91}
-.actions button.delete{color:#ff8585}
-#search{
- width:100%;padding:12px;border-radius:10px;
- background:#111622;color:white;border:1px solid #343b4d;
- margin-bottom:12px;font-size:15px
-}
-.empty{text-align:center;color:#9ba4b8;padding:30px}
-footer{text-align:center;color:#777f91;font-size:12px;padding:25px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif}
+header{padding:16px;background:#121725;border-bottom:1px solid var(--line);position:sticky;top:0}
+.brand{font-size:26px;font-weight:900;color:#a99dff;max-width:700px;margin:auto}
+main{max-width:700px;margin:20px auto;padding:0 12px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:14px}
+h2{font-size:18px;margin:0 0 12px}
+textarea,input,select{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0f1420;color:white;font:inherit;margin:4px 0}
+textarea{min-height:85px}
+button{background:var(--accent);color:white;border:0;border-radius:10px;padding:10px 15px;font:inherit;font-weight:bold;margin:5px 3px;cursor:pointer}
+.secondary{background:#30394d}
+.stories{display:flex;gap:12px;overflow:auto}
+.story{text-align:center;min-width:70px;cursor:pointer}
+.avatar{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;margin:auto;background:linear-gradient(135deg,#8b7cff,#42d6bd);color:#10131d;font-weight:bold;font-size:22px}
+small,.muted{color:var(--muted)}
+.head{display:flex;gap:10px;align-items:center}
+.post{white-space:pre-wrap;line-height:1.8;margin:14px 0}
+.comment{padding:8px;background:#101521;border-radius:8px;margin-top:6px}
+.hidden{display:none!important}
+.modal{position:fixed;inset:0;background:#000c;display:grid;place-items:center;padding:16px}
+.modal>div{max-width:420px;width:100%;background:var(--panel);padding:18px;border-radius:16px}
+.note{text-align:center;color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
-<header>
- <div class="logo">NOVA</div>
- <div class="subtitle">عالم يجمعنا باحترام</div>
-</header>
-
+<header><div class="brand">NOVA ✦</div></header>
 <main>
- <div class="card">
-  <textarea id="postInput" maxlength="1000"
-   placeholder="شنو ببالك اليوم؟ شارك مجتمع نوفا..."></textarea>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
-   <span style="color:#8993a8;font-size:12px">شارك بأدب واحترام ❤️</span>
-   <button class="primary" id="publish">نشر</button>
-  </div>
- </div>
 
- <div class="nav">
-  <button class="active" data-tab="home">الرئيسية</button>
-  <button data-tab="explore">استكشاف</button>
-  <button data-tab="profile">منشوراتي</button>
- </div>
+<section class="panel">
+<h2>الستوريات</h2>
+<div class="stories" id="stories"></div>
+</section>
 
- <input id="search" placeholder="🔎 ابحث بالمنشورات...">
- <section id="feed"></section>
+<section class="panel">
+<h2>أضف ستوري</h2>
+<textarea id="storyText" maxlength="240" placeholder="شنو تحب تشارك؟"></textarea>
+<select id="privacy">
+<option value="all">الكل</option>
+<option value="followers">المتابعون</option>
+<option value="selected">أشخاص محددون</option>
+<option value="me">أنا فقط</option>
+</select>
+<input id="people" class="hidden" placeholder="أسماء الأشخاص، افصل بينها بفاصلة">
+<button id="addStory">نشر الستوري</button>
+<p class="muted">تنتهي الستوري بعد 24 ساعة. خيارات الجمهور واجهة تجريبية حالياً.</p>
+</section>
+
+<section class="panel">
+<h2>منشور جديد</h2>
+<textarea id="postText" placeholder="اكتب منشورك..."></textarea>
+<button id="addPost">نشر</button>
+</section>
+
+<section id="feed"></section>
+<p class="note">نسخة تجريبية: البيانات محفوظة على هذا الجهاز فقط، وليست مشتركة بين المستخدمين.</p>
 </main>
 
-<footer>NOVA © 2026 — مجتمع يحترم الجميع</footer>
+<div id="modal" class="modal hidden">
+<div>
+<button id="close" class="secondary">إغلاق</button>
+<h2 id="mt"></h2>
+<p id="mb"></p>
+<small id="mm"></small>
+</div>
+</div>
 
 <script>
-const feed = document.getElementById("feed");
-const input = document.getElementById("postInput");
-const search = document.getElementById("search");
-
-let tab = "home";
-let posts = JSON.parse(localStorage.getItem("nova_posts") || "[]");
-
-function save(){
- localStorage.setItem("nova_posts",JSON.stringify(posts));
-}
-
-function safe(text){
- return String(text).replace(/[&<>"']/g,function(c){
-  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
- });
-}
-
-function render(){
- const q = search.value.trim().toLowerCase();
- let list = [...posts];
-
- if(tab==="profile") list=list.filter(p=>p.mine);
- if(tab==="explore") list.reverse();
-
- list=list.filter(p=>p.text.toLowerCase().includes(q));
-
- if(!list.length){
-  feed.innerHTML='<div class="card empty">ماكو منشورات هنا حالياً 🌙</div>';
-  return;
- }
-
- feed.innerHTML=list.map(p=>`
-  <article class="card">
-   <div class="post-head">
-    <div class="avatar">N</div>
-    <div>
-     <div class="name">${safe(p.name)}</div>
-     <div class="time">${safe(p.time)}</div>
-    </div>
-   </div>
-   <div class="post-text">${safe(p.text)}</div>
-   <div class="actions">
-    <button class="${p.liked?'liked':''}" data-like="${p.id}">
-     ${p.liked?'❤️':'🤍'} ${p.likes||0}
-    </button>
-    <button data-report="${p.id}">⚑ إبلاغ</button>
-    ${p.mine?`<button class="delete" data-delete="${p.id}">🗑 حذف</button>`:''}
-   </div>
-  </article>
- `).join("");
-}
-
-document.getElementById("publish").onclick=()=>{
- const text=input.value.trim();
- if(!text)return;
- posts.unshift({
-  id:Date.now(),name:"مستخدم نوفا",text,
-  time:new Date().toLocaleString("ar-IQ"),
-  likes:0,liked:false,mine:true
- });
- save();input.value="";render();
+const $=x=>document.getElementById(x);
+const read=(k)=>{
+try{return JSON.parse(localStorage.getItem(k)||'[]')}
+catch{return []}
 };
 
-document.querySelectorAll(".nav button").forEach(btn=>{
- btn.onclick=()=>{
-  tab=btn.dataset.tab;
-  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");render();
- };
+let posts=read('nova_posts');
+let stories=read('nova_stories');
+
+const save=()=>{
+localStorage.setItem('nova_posts',JSON.stringify(posts));
+localStorage.setItem('nova_stories',JSON.stringify(stories));
+};
+
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({
+'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+}[c]));
+
+const when=t=>new Date(t).toLocaleString('ar-IQ');
+
+function renderStories(){
+stories=stories.filter(s=>Date.now()-s.time<86400000);
+save();
+
+$('stories').innerHTML=stories.length
+?stories.map(s=>`
+<div class="story" data-id="${s.id}">
+<div class="avatar">ن</div>
+<small>${esc(s.author)}</small>
+</div>`).join('')
+:'<p class="muted">ماكو ستوريات حالياً</p>';
+
+document.querySelectorAll('.story').forEach(e=>{
+e.onclick=()=>{
+let s=stories.find(x=>x.id===e.dataset.id);
+$('mt').textContent='ستوري '+s.author;
+$('mb').textContent=s.text;
+$('mm').textContent='نُشرت: '+when(s.time);
+$('modal').classList.remove('hidden');
+};
+});
+}
+
+function renderPosts(){
+$('feed').innerHTML=posts.slice().reverse().map(p=>`
+<article class="panel">
+<div class="head">
+<div class="avatar">ن</div>
+<div>
+<b>${esc(p.author)}</b><br>
+<small>${when(p.time)}</small>
+</div>
+</div>
+<div class="post">${esc(p.text)}</div>
+<button class="secondary" data-like="${p.id}">♥ ${p.likes}</button>
+<button class="secondary" data-comment="${p.id}">تعليق</button>
+<button class="secondary" data-del="${p.id}">حذف</button>
+${p.comments.map(c=>`<div class="comment">${esc(c)}</div>`).join('')}
+</article>`).join('')
+||'<section class="panel muted">ماكو منشورات بعد. اكتب أول منشور!</section>';
+
+document.querySelectorAll('[data-like]').forEach(b=>{
+b.onclick=()=>{
+let p=posts.find(x=>x.id===b.dataset.like);
+p.likes++;
+save();
+renderPosts();
+};
 });
 
-search.oninput=render;
-
-feed.onclick=(e)=>{
- const like=e.target.closest("[data-like]");
- const del=e.target.closest("[data-delete]");
- const report=e.target.closest("[data-report]");
-
- if(like){
-  const p=posts.find(x=>x.id==like.dataset.like);
-  if(p){
-   p.liked=!p.liked;
-   p.likes=Math.max(0,(p.likes||0)+(p.liked?1:-1));
-   save();render();
-  }
- }
-
- if(del){
-  if(confirm("متأكد تريد تحذف المنشور؟")){
-   posts=posts.filter(x=>x.id!=del.dataset.delete);
-   save();render();
-  }
- }
-
- if(report){
-  alert("وصل بلاغك بشكل تجريبي. نظام البلاغات الحقيقي نضيفه لاحقاً.");
- }
-};
-
-render();
-</script>
-</body>
-</html>
+document.querySelector
