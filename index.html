@@ -173,6 +173,32 @@ footer{
 
 <button class="primary" onclick="saveVoiceSettings()">حفظ الإعدادات</button>
 <button onclick="testVoice()">تجربة الصوت</button>
+<h3>إعدادات الإشعارات</h3>
+
+<label>
+  <input type="checkbox" checked
+    onchange="novaNotifications.enabled=this.checked;saveNotificationSettings()">
+  تشغيل الإشعارات
+</label>
+
+<br><br>
+
+<label>
+  <input type="checkbox" checked
+    onchange="novaNotifications.sound=this.checked;saveNotificationSettings()">
+  تشغيل صوت الإشعارات
+</label>
+
+<br><br>
+
+<button onclick="saveNotificationSettings()">
+  حفظ إعدادات الإشعارات
+</button>
+
+<button onclick="showNovaNotification('هذا إشعار تجريبي من نوفا')">
+  تجربة الإشعار
+</button>
+
 <p id="voiceStatus" class="muted"></p>
 </div>
 </section><script>
@@ -321,7 +347,32 @@ function testVoice(){
  speakText("مرحباً بك في نوفا، عالم يجمعنا باحترام");
 }
 
-renderPosts();
+// إعدادات إشعارات NOVA
+let novaNotifications = JSON.parse(
+ localStorage.getItem("novaNotifications") || '{"enabled":true,"sound":true}'
+);
+
+function saveNotificationSettings(){
+ localStorage.setItem(
+  "novaNotifications",
+  JSON.stringify(novaNotifications)
+ );
+}
+
+function showNovaNotification(message){
+ if(!novaNotifications.enabled) return;
+
+ alert("🔔 إشعار من NOVA\n" + message);
+
+ if(novaNotifications.sound){
+  try{
+   let audio = new Audio(
+    "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="
+   );
+   audio.play();
+  }catch(e){}
+ }
+ }renderPosts();
 updateProfile();
 </script>
 </body>
