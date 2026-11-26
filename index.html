@@ -3,271 +3,147 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NOVA</title>
 <style>
-:root{
- --bg:#0d1018;--panel:#171c29;--line:#2b3448;
- --text:#f4f6fb;--muted:#aab3c5;--accent:#8b7cff;
-}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif}
-header{padding:16px;background:#121725;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
-.brand{font-size:27px;font-weight:900;color:#a99dff;max-width:700px;margin:auto}
-main{max-width:700px;margin:20px auto;padding:0 12px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:14px}
-h2{font-size:18px;margin:0 0 12px}
-input,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0f1420;color:white;font:inherit;margin:5px 0}
-textarea{min-height:100px}
-button{background:var(--accent);color:white;border:0;border-radius:10px;padding:10px 15px;font:inherit;font-weight:bold;margin:5px 3px;cursor:pointer}
-.secondary{background:#30394d}
-.muted{color:var(--muted)}
-.post{white-space:pre-wrap;line-height:1.8;margin:14px 0}
-.head{display:flex;gap:10px;align-items:center}
-.avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#8b7cff,#42d6bd);color:#10131d;font-weight:bold;font-size:20px}
-.comment{padding:8px;background:#101521;border-radius:8px;margin-top:6px}
-.hidden{display:none!important}
-.note{text-align:center;color:var(--muted);font-size:12px}
+body{
+ margin:0;
+ background:#10131c;
+ color:#f4f5f8;
+ font-family:Arial,sans-serif;
+}
+header{
+ padding:25px 15px;
+ text-align:center;
+ background:#171b26;
+ border-bottom:1px solid #252c3b;
+}
+.logo{color:#65aaff;font-size:32px;font-weight:bold}
+.subtitle{color:#aab3c4;margin-top:8px}
+.container{max-width:600px;margin:auto;padding:20px}
+.card{
+ background:#171b26;
+ border:1px solid #293143;
+ border-radius:16px;
+ padding:20px;
+ margin:18px 0;
+}
+h2{margin-top:0}
+input,textarea{
+ width:100%;
+ padding:14px;
+ margin:9px 0;
+ border:1px solid #343d50;
+ border-radius:10px;
+ background:#10131c;
+ color:white;
+ font-size:16px;
+}
+button{
+ border:0;
+ border-radius:10px;
+ padding:13px 18px;
+ cursor:pointer;
+ font-size:16px;
+}
+.primary{
+ background:#65aaff;
+ color:#10131c;
+ font-weight:bold;
+ width:100%;
+ margin-top:10px;
+}
+.switch{
+ background:transparent;
+ color:#65aaff;
+ width:100%;
+ margin-top:12px;
+}
+.message{color:#9ba8bd;text-align:center;margin-top:12px}
+.hidden{display:none}
+footer{text-align:center;color:#929bad;padding:25px}
 </style>
 </head>
 <body>
-<header><div class="brand">NOVA ✦</div></header>
-<main>
 
-<section class="panel" id="account">
-<h2>حساب نوفا</h2>
-<p class="muted">أنشئ حساب جديد أو سجّل دخولك</p>
-<input id="username" placeholder="اسم المستخدم (للحساب الجديد)">
-<input id="email" type="email" placeholder="البريد الإلكتروني">
-<input id="password" type="password" placeholder="كلمة المرور (6 أحرف على الأقل)">
-<button id="signup">إنشاء حساب</button>
-<button id="login" class="secondary">تسجيل الدخول</button>
-<p id="authMsg" class="muted"></p>
-</section>
+<header>
+ <div class="logo">NOVA</div>
+ <div class="subtitle">عالم يجمعنا باحترام</div>
+</header>
 
-<section class="panel hidden" id="profile">
-<div class="head">
-<div class="avatar">N</div>
-<div>
-<b id="userName"></b><br>
-<small id="userEmail" class="muted"></small>
+<div class="container">
+
+<div class="card" id="authCard">
+ <h2 id="formTitle">إنشاء حساب جديد</h2>
+ <p class="message" id="formDescription">
+ أهلاً بيك بنوفا، أنشئ حسابك وابدأ رحلتك.
+ </p>
+
+ <input id="email" type="email" placeholder="البريد الإلكتروني" autocomplete="email">
+
+ <input id="password" type="password" placeholder="كلمة المرور" autocomplete="new-password">
+
+ <button class="primary" id="submitBtn" onclick="submitForm()">
+ إنشاء حساب
+ </button>
+
+ <button class="switch" id="switchBtn" onclick="switchMode()">
+ عندك حساب؟ تسجيل الدخول
+ </button>
+
+ <p class="message" id="result"></p>
 </div>
+
 </div>
-<button id="logout" class="secondary">تسجيل الخروج</button>
-</section>
 
-<section class="panel hidden" id="composer">
-<h2>شنو يخطر ببالك اليوم؟</h2>
-<textarea id="postText" maxlength="2000" placeholder="شارك مجتمع نوفا..."></textarea>
-<button id="publish">نشر</button>
-<p class="muted">شارك بأدب واحترام ✦</p>
-</section>
+<footer>
+ NOVA — عالم يجمعنا باحترام
+</footer>
 
-<section class="panel">
-<h2>منشورات المجتمع</h2>
-<div id="feed"><p class="muted">جار تحميل المنشورات...</p></div>
-</section>
+<script>
+let isLogin=false;
 
-<p class="note">NOVA — عالم يجمعنا باحترام</p>
-</main>
+function switchMode(){
+ isLogin=!isLogin;
+ document.getElementById("formTitle").textContent=
+ isLogin?"تسجيل الدخول":"إنشاء حساب جديد";
 
-<script type="module">
-import { initializeApp } from
- "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+ document.getElementById("formDescription").textContent=
+ isLogin?"أهلاً بعودتك إلى نوفا.":"أهلاً بيك بنوفا، أنشئ حسابك وابدأ رحلتك.";
 
-import {
- getAuth,createUserWithEmailAndPassword,
- signInWithEmailAndPassword,signOut,onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+ document.getElementById("submitBtn").textContent=
+ isLogin?"دخول":"إنشاء حساب";
 
-import {
- getFirestore,collection,addDoc,query,orderBy,onSnapshot,
- doc,deleteDoc,runTransaction,serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+ document.getElementById("switchBtn").textContent=
+ isLogin?"ما عندك حساب؟ إنشاء حساب":"عندك حساب؟ تسجيل الدخول";
 
-/* ضع إعدادات Firebase الخاصة بمشروعك هنا */
-const firebaseConfig = {
- apiKey: "ضع_API_KEY_هنا",
- authDomain: "ضع_AUTH_DOMAIN_هنا",
- projectId: "ضع_PROJECT_ID_هنا",
- storageBucket: "ضع_STORAGE_BUCKET_هنا",
- messagingSenderId: "ضع_MESSAGING_SENDER_ID_هنا",
- appId: "ضع_APP_ID_هنا"
-};
+ document.getElementById("password").autocomplete=
+ isLogin?"current-password":"new-password";
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const $ = id => document.getElementById(id);
-
-let currentUser=null;
-let stopFeed=null;
-
-function message(text){
- $("authMsg").textContent=text;
+ document.getElementById("result").textContent="";
 }
 
-function escapeHTML(value){
- return String(value).replace(/[&<>"']/g,c=>({
- "&":"&amp;","<":"&lt;",">":"&gt;",
- '"':"&quot;","'":"&#39;"
- }[c]));
-}
+function submitForm(){
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+ const result=document.getElementById("result");
 
-function dateText(timestamp){
- if(!timestamp)return "الآن";
- const date=timestamp.toDate();
- return date.toLocaleString("ar-IQ");
-}
-
-$("signup").onclick=async()=>{
- const name=$("username").value.trim();
- const email=$("email").value.trim();
- const password=$("password").value;
- if(!name||!email||!password)return message("املأ الاسم والبريد وكلمة المرور");
- try{
-  const result=await createUserWithEmailAndPassword(auth,email,password);
-  await result.user.updateProfile({displayName:name});
-  message("تم إنشاء الحساب بنجاح");
- }catch(e){message("تعذر إنشاء الحساب: "+e.message)}
-};
-
-$("login").onclick=async()=>{
- try{
-  await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);
-  message("تم تسجيل الدخول");
- }catch(e){message("تعذر تسجيل الدخول، تأكد من البيانات")}
-};
-
-$("logout").onclick=()=>signOut(auth);
-
-onAuthStateChanged(auth,user=>{
- currentUser=user;
- $("account").classList.toggle("hidden",!!user);
- $("profile").classList.toggle("hidden",!user);
- $("composer").classList.toggle("hidden",!user);
- if(user){
-  $("userName").textContent=user.displayName||"مستخدم نوفا";
-  $("userEmail").textContent=user.email||"";
-  loadFeed();
- }else{
-  if(stopFeed){stopFeed();stopFeed=null;}
+ if(!email||!password){
+  result.textContent="يرجى إدخال البريد الإلكتروني وكلمة المرور.";
+  return;
  }
-});
 
-async function loadFeed(){
- if(stopFeed)stopFeed();
- const q=query(collection(db,"posts"),orderBy("createdAt","desc"));
- stopFeed=onSnapshot(q,snapshot=>{
-  const feed=$("feed");
-  if(snapshot.empty){
-   feed.innerHTML='<p class="muted">ماكو منشورات بعد. اكتب أول منشور!</p>';
-   return;
-  }
-  feed.innerHTML="";
-  snapshot.forEach(item=>{
-   const p=item.data();
-   const id=item.id;
-   const liked=(p.likedBy||[]).includes(currentUser?.uid);
-   const comments=p.comments||[];
-   const article=document.createElement("article");
-   article.className="panel";
-   article.innerHTML=`
-    <div class="head">
-     <div class="avatar">${escapeHTML((p.author||"N").slice(0,1))}</div>
-     <div><b>${escapeHTML(p.author||"مستخدم نوفا")}</b><br>
-     <small class="muted">${dateText(p.createdAt)}</small></div>
-    </div>
-    <div class="post">${escapeHTML(p.text||"")}</div>
-    <button class="secondary likeBtn">${liked?"♥":"♡"} ${ (p.likedBy||[]).length }</button>
-    <button class="secondary commentBtn">تعليق (${comments.length})</button>
-    ${p.uid===currentUser?.uid?'<button class="secondary deleteBtn">حذف منشورك</button>':''}
-    <div class="comments"></div>
-   `;
-   article.querySelector(".likeBtn").onclick=()=>toggleLike(id);
-   article.querySelector(".commentBtn").onclick=()=>addComment(id);
-   const commentBox=article.querySelector(".comments");
-   comments.forEach(c=>{
-    const div=document.createElement("div");
-    div.className="comment";
-    div.innerHTML=`<b>${escapeHTML(c.author)}</b><br>${escapeHTML(c.text)}`;
-    commentBox.appendChild(div);
-   });
-   const del=article.querySelector(".deleteBtn");
-   if(del)del.onclick=()=>deletePost(id,p.uid);
-   feed.appendChild(article);
-  });
- },error=>{
-  $("feed").innerHTML='<p class="muted">تعذر تحميل المنشورات. تأكد من إعداد قاعدة البيانات.</p>';
-  console.error(error);
- });
-}
+ if(password.length<6){
+  result.textContent="كلمة المرور لازم تكون 6 أحرف أو أكثر.";
+  return;
+ }
 
-$("publish").onclick=async()=>{
- const text=$("postText").value.trim();
- if(!text)return alert("اكتب شي قبل النشر");
- if(!currentUser)return alert("سجل الدخول أولاً");
- $("publish").disabled=true;
- try{
-  await addDoc(collection(db,"posts"),{
-   text,
-   uid:currentUser.uid,
-   author:currentUser.displayName||"مستخدم نوفا",
-   likedBy:[],
-   comments:[],
-   createdAt:serverTimestamp()
- });
- $("postText").value="";
- }catch(e){alert("تعذر نشر المنشور: "+e.message)}
- $("publish").disabled=false;
-};
-
-async function toggleLike(id){
- if(!currentUser)return;
- const ref=doc(db,"posts",id);
- try{
-  await runTransaction(db,async tx=>{
-   const snap=await tx.get(ref);
-   if(!snap.exists())return;
-   const data=snap.data();
-   let likedBy=data.likedBy||[];
-   if(likedBy.includes(currentUser.uid)){
-    likedBy=likedBy.filter(x=>x!==currentUser.uid);
-   }else{
-    likedBy=[...likedBy,currentUser.uid];
-   }
-   tx.update(ref,{likedBy});
-  });
- }catch(e){console.error(e);alert("تعذر تحديث الإعجاب");}
-}
-
-async function addComment(id){
- if(!currentUser)return;
- const text=prompt("اكتب تعليقك:");
- if(!text||!text.trim())return;
- const ref=doc(db,"posts",id);
- try{
-  await runTransaction(db,async tx=>{
-   const snap=await tx.get(ref);
-   if(!snap.exists())return;
-   const comments=snap.data().comments||[];
-   comments.push({
-    uid:currentUser.uid,
-    author:currentUser.displayName||"مستخدم",
-    text:text.trim(),
-    time:Date.now()
-   });
-   tx.update(ref,{comments});
-  });
- }catch(e){alert("تعذر إضافة التعليق");}
-}
-
-async function deletePost(id,uid){
- if(uid!==currentUser?.uid)return;
- if(!confirm("متأكد تريد حذف المنشور؟"))return;
- try{await deleteDoc(doc(db,"posts",id));}
- catch(e){alert("تعذر حذف المنشور");}
+ result.textContent=isLogin
+ ?"واجهة تسجيل الدخول جاهزة — سيتم ربط الحسابات في التحديث القادم."
+ :"واجهة إنشاء الحساب جاهزة — سيتم تفعيل إنشاء الحسابات في التحديث القادم.";
 }
 </script>
+
 </body>
 </html>
