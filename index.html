@@ -375,5 +375,54 @@ function showNovaNotification(message){
  }renderPosts();
 updateProfile();
 </script>
+ <!-- ===== واجهة الاصدقاء - البحث باسم المستخدم ===== -->
+<div id="friendsPage" style="display:none; padding:15px;">
+  <h2 style="color:white;">الاصدقاء</h2>
+
+  <input id="searchBox" type="text" placeholder="ابحث باسم المستخدم @ali_123"
+    style="width:100%; padding:12px; border-radius:10px; border:none; background:#2a2a2a; color:white; margin:10px 0;"
+    oninput="doSearch()" />
+
+  <div id="results"></div>
+
+  <h3 style="color:white; margin-top:20px;">طلبات الصداقة</h3>
+  <div id="requests" style="background:#1a1a1a; padding:10px; border-radius:10px; color:#aaa;">
+    لا توجد طلبات حاليا
+  </div>
+</div>
+
+<script>
+let users = [
+  {name:"علي حسين", user:"ali_123"},
+  {name:"نوفا", user:"nova_ali"},
+  {name:"نور", user:"noor.2026"}
+];
+
+function doSearch(){
+  let val = document.getElementById("searchBox").value.toLowerCase().replace("@","");
+  let box = document.getElementById("results");
+  box.innerHTML = "";
+  if(val === "") return;
+  let found = users.filter(u => u.user.toLowerCase().startsWith(val));
+  if(found.length === 0){
+    box.innerHTML = "<p style='color:#aaa;'>ما لگينا احد بهذا الاسم</p>";
+    return;
+  }
+  found.forEach(u => {
+    box.innerHTML += `
+      <div style="background:#1a1a1a; padding:10px; border-radius:10px; margin:5px 0; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <b style="color:white;">${u.name}</b><br>
+          <span style="color:#888;">@${u.user}</span>
+        </div>
+        <button onclick="addFriend('${u.user}')" style="background:#00c853; color:white; border:none; padding:8px 12px; border-radius:8px;">اضافة صديق</button>
+      </div>
+    `;
+  });
+}
+function addFriend(user){
+  alert("تم ارسال طلب صداقة الى @" + user);
+}
+</script>
 </body>
 </html>
