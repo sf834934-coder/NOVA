@@ -175,4 +175,154 @@ footer{
 <button onclick="testVoice()">تجربة الصوت</button>
 <p id="voiceStatus" class="muted"></p>
 </div>
-</section>
+</section><script>
+const defaults={
+ name:"",
+ points:0,
+ posts:[],
+ stories:[],
+ messages:{}
+};
+
+let data;
+try{
+ data=JSON.parse(localStorage.getItem("novaData"))||defaults;
+}catch(e){data=defaults;}
+
+function save(){
+ localStorage.setItem("novaData",JSON.stringify(data));
+ updateProfile();
+}
+
+function showPage(id,btn){
+ document.querySelectorAll(".page").forEach(p=>{
+  p.classList.remove("active");
+ });
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll("nav button").forEach(b=>{
+  b.classList.remove("active");
+ });
+ btn.classList.add("active");
+}
+
+function publishPost(){
+ let input=document.getElementById("postText");
+ let text=input.value.trim();
+ if(!text)return;
+ data.posts.unshift({
+  name:data.name||"عضو نوفا",
+  text:text,
+  time:new Date().toLocaleString("ar")
+ });
+ data.points+=2;
+ input.value="";
+ save();
+ renderPosts();
+}
+
+function renderPosts(){
+ let box=document.getElementById("posts");
+ box.innerHTML="";
+ data.posts.forEach(p=>{
+  let card=document.createElement("div");
+  card.className="card";
+  card.textContent=p.name+" : "+p.text;
+  box.appendChild(card);
+ });
+}
+
+function searchPosts(){
+ let q=document.getElementById("searchText").value.toLowerCase();
+ let box=document.getElementById("searchResults");
+ box.innerHTML="";
+ data.posts.filter(p=>p.text.toLowerCase().includes(q))
+ .forEach(p=>{
+  let el=document.createElement("div");
+  el.className="card";
+  el.textContent=p.name+" : "+p.text;
+  box.appendChild(el);
+ });
+}
+
+function openChat(){
+ let name=document.getElementById("friendName").value.trim();
+ if(!name)return;
+ data.messages[name]=data.messages[name]||[];
+ document.getElementById("chatBox").classList.remove("hidden");
+ document.getElementById("chatTitle").textContent="محادثة "+name;
+ renderMessages(name);
+}
+
+function renderMessages(name){
+ let box=document.getElementById("messages");
+ box.innerHTML="";
+ (data.messages[name]||[]).forEach(m=>{
+  let el=document.createElement("div");
+  el.className="message";
+  el.textContent=m.text;
+  let read=document.createElement("button");
+  read.textContent="🔊 اقرأ بصوت";
+  read.onclick=()=>speakText(m.text);
+  el.appendChild(read);
+  box.appendChild(el);
+ });
+}
+
+function sendMessage(){
+ let name=document.getElementById("friendName").value.trim();
+ let input=document.getElementById("messageText");
+ let text=input.value.trim();
+ if(!name||!text)return;
+ data.messages[name]=data.messages[name]||[];
+ data.messages[name].push({text:text});
+ data.points++;
+ input.value="";
+ save();
+ renderMessages(name);
+}
+
+function saveName(){
+ let name=document.getElementById("nameInput").value.trim();
+ if(!name)return;
+ data.name=name;
+ save();
+}
+
+function updateProfile(){
+ document.getElementById("pointCount").textContent=data.points;
+ document.getElementById("nameInput").value=data.name||"";
+}
+
+function saveVoiceSettings(){
+ let settings={
+  country:document.getElementById("country").value,
+  language:document.getElementById("voiceLanguage").value,
+  dialect:document.getElementById("voiceDialect").value,
+  speed:document.getElementById("voiceSpeed").value
+ };
+ localStorage.setItem("novaVoiceSettings",JSON.stringify(settings));
+ document.getElementById("voiceStatus").textContent="تم حفظ إعدادات الصوت بنجاح";
+}
+
+function speakText(text){
+ if(!("speechSynthesis" in window)){
+  alert("الصوت غير مدعوم بهذا الجهاز");
+  return;
+ }
+ let settings=JSON.parse(localStorage.getItem("novaVoiceSettings")||"{}");
+ let speech=new SpeechSynthesisUtterance(text);
+ speech.lang=settings.language==="en"?"en-US":"ar";
+ speech.rate=Number(settings.speed)||1;
+ speechSynthesis.cancel();
+ speechSynthesis.speak(speech);
+}
+
+function testVoice(){
+ speakText("مرحباً بك في نوفا، عالم يجمعنا باحترام");
+}
+
+renderPosts();
+updateProfile();
+</script>
+</body>
+</html>
