@@ -1,32 +1,32 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NOVA</title>
 <style>
-:root{color-scheme:dark;--bg:#0d1018;--panel:#171c29;--line:#2b3448;--text:#f4f6fb;--muted:#aab3c5;--accent:#8b7cff}
+:root{
+ --bg:#0d1018;--panel:#171c29;--line:#2b3448;
+ --text:#f4f6fb;--muted:#aab3c5;--accent:#8b7cff;
+}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif}
-header{padding:16px;background:#121725;border-bottom:1px solid var(--line);position:sticky;top:0}
-.brand{font-size:26px;font-weight:900;color:#a99dff;max-width:700px;margin:auto}
+header{padding:16px;background:#121725;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{font-size:27px;font-weight:900;color:#a99dff;max-width:700px;margin:auto}
 main{max-width:700px;margin:20px auto;padding:0 12px}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:14px}
 h2{font-size:18px;margin:0 0 12px}
-textarea,input,select{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0f1420;color:white;font:inherit;margin:4px 0}
-textarea{min-height:85px}
+input,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0f1420;color:white;font:inherit;margin:5px 0}
+textarea{min-height:100px}
 button{background:var(--accent);color:white;border:0;border-radius:10px;padding:10px 15px;font:inherit;font-weight:bold;margin:5px 3px;cursor:pointer}
 .secondary{background:#30394d}
-.stories{display:flex;gap:12px;overflow:auto}
-.story{text-align:center;min-width:70px;cursor:pointer}
-.avatar{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;margin:auto;background:linear-gradient(135deg,#8b7cff,#42d6bd);color:#10131d;font-weight:bold;font-size:22px}
-small,.muted{color:var(--muted)}
-.head{display:flex;gap:10px;align-items:center}
+.muted{color:var(--muted)}
 .post{white-space:pre-wrap;line-height:1.8;margin:14px 0}
+.head{display:flex;gap:10px;align-items:center}
+.avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#8b7cff,#42d6bd);color:#10131d;font-weight:bold;font-size:20px}
 .comment{padding:8px;background:#101521;border-radius:8px;margin-top:6px}
 .hidden{display:none!important}
-.modal{position:fixed;inset:0;background:#000c;display:grid;place-items:center;padding:16px}
-.modal>div{max-width:420px;width:100%;background:var(--panel);padding:18px;border-radius:16px}
 .note{text-align:center;color:var(--muted);font-size:12px}
 </style>
 </head>
@@ -34,113 +34,240 @@ small,.muted{color:var(--muted)}
 <header><div class="brand">NOVA ✦</div></header>
 <main>
 
-<section class="panel">
-<h2>الستوريات</h2>
-<div class="stories" id="stories"></div>
+<section class="panel" id="account">
+<h2>حساب نوفا</h2>
+<p class="muted">أنشئ حساب جديد أو سجّل دخولك</p>
+<input id="username" placeholder="اسم المستخدم (للحساب الجديد)">
+<input id="email" type="email" placeholder="البريد الإلكتروني">
+<input id="password" type="password" placeholder="كلمة المرور (6 أحرف على الأقل)">
+<button id="signup">إنشاء حساب</button>
+<button id="login" class="secondary">تسجيل الدخول</button>
+<p id="authMsg" class="muted"></p>
+</section>
+
+<section class="panel hidden" id="profile">
+<div class="head">
+<div class="avatar">N</div>
+<div>
+<b id="userName"></b><br>
+<small id="userEmail" class="muted"></small>
+</div>
+</div>
+<button id="logout" class="secondary">تسجيل الخروج</button>
+</section>
+
+<section class="panel hidden" id="composer">
+<h2>شنو يخطر ببالك اليوم؟</h2>
+<textarea id="postText" maxlength="2000" placeholder="شارك مجتمع نوفا..."></textarea>
+<button id="publish">نشر</button>
+<p class="muted">شارك بأدب واحترام ✦</p>
 </section>
 
 <section class="panel">
-<h2>أضف ستوري</h2>
-<textarea id="storyText" maxlength="240" placeholder="شنو تحب تشارك؟"></textarea>
-<select id="privacy">
-<option value="all">الكل</option>
-<option value="followers">المتابعون</option>
-<option value="selected">أشخاص محددون</option>
-<option value="me">أنا فقط</option>
-</select>
-<input id="people" class="hidden" placeholder="أسماء الأشخاص، افصل بينها بفاصلة">
-<button id="addStory">نشر الستوري</button>
-<p class="muted">تنتهي الستوري بعد 24 ساعة. خيارات الجمهور واجهة تجريبية حالياً.</p>
+<h2>منشورات المجتمع</h2>
+<div id="feed"><p class="muted">جار تحميل المنشورات...</p></div>
 </section>
 
-<section class="panel">
-<h2>منشور جديد</h2>
-<textarea id="postText" placeholder="اكتب منشورك..."></textarea>
-<button id="addPost">نشر</button>
-</section>
-
-<section id="feed"></section>
-<p class="note">نسخة تجريبية: البيانات محفوظة على هذا الجهاز فقط، وليست مشتركة بين المستخدمين.</p>
+<p class="note">NOVA — عالم يجمعنا باحترام</p>
 </main>
 
-<div id="modal" class="modal hidden">
-<div>
-<button id="close" class="secondary">إغلاق</button>
-<h2 id="mt"></h2>
-<p id="mb"></p>
-<small id="mm"></small>
-</div>
-</div>
+<script type="module">
+import { initializeApp } from
+ "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-<script>
-const $=x=>document.getElementById(x);
-const read=(k)=>{
-try{return JSON.parse(localStorage.getItem(k)||'[]')}
-catch{return []}
+import {
+ getAuth,createUserWithEmailAndPassword,
+ signInWithEmailAndPassword,signOut,onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+ getFirestore,collection,addDoc,query,orderBy,onSnapshot,
+ doc,deleteDoc,runTransaction,serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ضع إعدادات Firebase الخاصة بمشروعك هنا */
+const firebaseConfig = {
+ apiKey: "ضع_API_KEY_هنا",
+ authDomain: "ضع_AUTH_DOMAIN_هنا",
+ projectId: "ضع_PROJECT_ID_هنا",
+ storageBucket: "ضع_STORAGE_BUCKET_هنا",
+ messagingSenderId: "ضع_MESSAGING_SENDER_ID_هنا",
+ appId: "ضع_APP_ID_هنا"
 };
 
-let posts=read('nova_posts');
-let stories=read('nova_stories');
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const $ = id => document.getElementById(id);
 
-const save=()=>{
-localStorage.setItem('nova_posts',JSON.stringify(posts));
-localStorage.setItem('nova_stories',JSON.stringify(stories));
-};
+let currentUser=null;
+let stopFeed=null;
 
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({
-'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-}[c]));
-
-const when=t=>new Date(t).toLocaleString('ar-IQ');
-
-function renderStories(){
-stories=stories.filter(s=>Date.now()-s.time<86400000);
-save();
-
-$('stories').innerHTML=stories.length
-?stories.map(s=>`
-<div class="story" data-id="${s.id}">
-<div class="avatar">ن</div>
-<small>${esc(s.author)}</small>
-</div>`).join('')
-:'<p class="muted">ماكو ستوريات حالياً</p>';
-
-document.querySelectorAll('.story').forEach(e=>{
-e.onclick=()=>{
-let s=stories.find(x=>x.id===e.dataset.id);
-$('mt').textContent='ستوري '+s.author;
-$('mb').textContent=s.text;
-$('mm').textContent='نُشرت: '+when(s.time);
-$('modal').classList.remove('hidden');
-};
-});
+function message(text){
+ $("authMsg").textContent=text;
 }
 
-function renderPosts(){
-$('feed').innerHTML=posts.slice().reverse().map(p=>`
-<article class="panel">
-<div class="head">
-<div class="avatar">ن</div>
-<div>
-<b>${esc(p.author)}</b><br>
-<small>${when(p.time)}</small>
-</div>
-</div>
-<div class="post">${esc(p.text)}</div>
-<button class="secondary" data-like="${p.id}">♥ ${p.likes}</button>
-<button class="secondary" data-comment="${p.id}">تعليق</button>
-<button class="secondary" data-del="${p.id}">حذف</button>
-${p.comments.map(c=>`<div class="comment">${esc(c)}</div>`).join('')}
-</article>`).join('')
-||'<section class="panel muted">ماكو منشورات بعد. اكتب أول منشور!</section>';
+function escapeHTML(value){
+ return String(value).replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",
+ '"':"&quot;","'":"&#39;"
+ }[c]));
+}
 
-document.querySelectorAll('[data-like]').forEach(b=>{
-b.onclick=()=>{
-let p=posts.find(x=>x.id===b.dataset.like);
-p.likes++;
-save();
-renderPosts();
+function dateText(timestamp){
+ if(!timestamp)return "الآن";
+ const date=timestamp.toDate();
+ return date.toLocaleString("ar-IQ");
+}
+
+$("signup").onclick=async()=>{
+ const name=$("username").value.trim();
+ const email=$("email").value.trim();
+ const password=$("password").value;
+ if(!name||!email||!password)return message("املأ الاسم والبريد وكلمة المرور");
+ try{
+  const result=await createUserWithEmailAndPassword(auth,email,password);
+  await result.user.updateProfile({displayName:name});
+  message("تم إنشاء الحساب بنجاح");
+ }catch(e){message("تعذر إنشاء الحساب: "+e.message)}
 };
+
+$("login").onclick=async()=>{
+ try{
+  await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);
+  message("تم تسجيل الدخول");
+ }catch(e){message("تعذر تسجيل الدخول، تأكد من البيانات")}
+};
+
+$("logout").onclick=()=>signOut(auth);
+
+onAuthStateChanged(auth,user=>{
+ currentUser=user;
+ $("account").classList.toggle("hidden",!!user);
+ $("profile").classList.toggle("hidden",!user);
+ $("composer").classList.toggle("hidden",!user);
+ if(user){
+  $("userName").textContent=user.displayName||"مستخدم نوفا";
+  $("userEmail").textContent=user.email||"";
+  loadFeed();
+ }else{
+  if(stopFeed){stopFeed();stopFeed=null;}
+ }
 });
 
-document.querySelector
+async function loadFeed(){
+ if(stopFeed)stopFeed();
+ const q=query(collection(db,"posts"),orderBy("createdAt","desc"));
+ stopFeed=onSnapshot(q,snapshot=>{
+  const feed=$("feed");
+  if(snapshot.empty){
+   feed.innerHTML='<p class="muted">ماكو منشورات بعد. اكتب أول منشور!</p>';
+   return;
+  }
+  feed.innerHTML="";
+  snapshot.forEach(item=>{
+   const p=item.data();
+   const id=item.id;
+   const liked=(p.likedBy||[]).includes(currentUser?.uid);
+   const comments=p.comments||[];
+   const article=document.createElement("article");
+   article.className="panel";
+   article.innerHTML=`
+    <div class="head">
+     <div class="avatar">${escapeHTML((p.author||"N").slice(0,1))}</div>
+     <div><b>${escapeHTML(p.author||"مستخدم نوفا")}</b><br>
+     <small class="muted">${dateText(p.createdAt)}</small></div>
+    </div>
+    <div class="post">${escapeHTML(p.text||"")}</div>
+    <button class="secondary likeBtn">${liked?"♥":"♡"} ${ (p.likedBy||[]).length }</button>
+    <button class="secondary commentBtn">تعليق (${comments.length})</button>
+    ${p.uid===currentUser?.uid?'<button class="secondary deleteBtn">حذف منشورك</button>':''}
+    <div class="comments"></div>
+   `;
+   article.querySelector(".likeBtn").onclick=()=>toggleLike(id);
+   article.querySelector(".commentBtn").onclick=()=>addComment(id);
+   const commentBox=article.querySelector(".comments");
+   comments.forEach(c=>{
+    const div=document.createElement("div");
+    div.className="comment";
+    div.innerHTML=`<b>${escapeHTML(c.author)}</b><br>${escapeHTML(c.text)}`;
+    commentBox.appendChild(div);
+   });
+   const del=article.querySelector(".deleteBtn");
+   if(del)del.onclick=()=>deletePost(id,p.uid);
+   feed.appendChild(article);
+  });
+ },error=>{
+  $("feed").innerHTML='<p class="muted">تعذر تحميل المنشورات. تأكد من إعداد قاعدة البيانات.</p>';
+  console.error(error);
+ });
+}
+
+$("publish").onclick=async()=>{
+ const text=$("postText").value.trim();
+ if(!text)return alert("اكتب شي قبل النشر");
+ if(!currentUser)return alert("سجل الدخول أولاً");
+ $("publish").disabled=true;
+ try{
+  await addDoc(collection(db,"posts"),{
+   text,
+   uid:currentUser.uid,
+   author:currentUser.displayName||"مستخدم نوفا",
+   likedBy:[],
+   comments:[],
+   createdAt:serverTimestamp()
+ });
+ $("postText").value="";
+ }catch(e){alert("تعذر نشر المنشور: "+e.message)}
+ $("publish").disabled=false;
+};
+
+async function toggleLike(id){
+ if(!currentUser)return;
+ const ref=doc(db,"posts",id);
+ try{
+  await runTransaction(db,async tx=>{
+   const snap=await tx.get(ref);
+   if(!snap.exists())return;
+   const data=snap.data();
+   let likedBy=data.likedBy||[];
+   if(likedBy.includes(currentUser.uid)){
+    likedBy=likedBy.filter(x=>x!==currentUser.uid);
+   }else{
+    likedBy=[...likedBy,currentUser.uid];
+   }
+   tx.update(ref,{likedBy});
+  });
+ }catch(e){console.error(e);alert("تعذر تحديث الإعجاب");}
+}
+
+async function addComment(id){
+ if(!currentUser)return;
+ const text=prompt("اكتب تعليقك:");
+ if(!text||!text.trim())return;
+ const ref=doc(db,"posts",id);
+ try{
+  await runTransaction(db,async tx=>{
+   const snap=await tx.get(ref);
+   if(!snap.exists())return;
+   const comments=snap.data().comments||[];
+   comments.push({
+    uid:currentUser.uid,
+    author:currentUser.displayName||"مستخدم",
+    text:text.trim(),
+    time:Date.now()
+   });
+   tx.update(ref,{comments});
+  });
+ }catch(e){alert("تعذر إضافة التعليق");}
+}
+
+async function deletePost(id,uid){
+ if(uid!==currentUser?.uid)return;
+ if(!confirm("متأكد تريد حذف المنشور؟"))return;
+ try{await deleteDoc(doc(db,"posts",id));}
+ catch(e){alert("تعذر حذف المنشور");}
+}
+</script>
+</body>
+</html>
