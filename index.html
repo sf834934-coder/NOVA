@@ -2,99 +2,149 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NOVA - كل العالم</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOVA - PinkyChat / SOCIALUXE</title>
 <style>
-*{box-sizing:border-box;font-family:system-ui} body{margin:0;background:#f4f0ff} header{background:linear-gradient(90deg,#7c3aed,#f97316);color:#fff;text-align:center;padding:16px;font-size:28px;font-weight:900;letter-spacing:4px} nav{display:flex;gap:8px;justify-content:center;background:#fff;padding:10px;flex-wrap:wrap;position:sticky;top:0;z-index:20} nav button{border:0;background:#ede9fe;padding:11px 15px;border-radius:999px;font-weight:800;cursor:pointer} nav button.active{background:#7c3aed;color:#fff} .page{display:none;padding:14px;max-width:720px;margin:auto} .page.active{display:block} .card{background:#fff;border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 5px 16px rgba(0,0,0,.07)} input,select,textarea{width:100%;padding:13px;border:1px solid #ddd;border-radius:12px;margin:8px 0;font-size:16px} .btn{width:100%;padding:14px;border:0;border-radius:12px;background:#2563eb;color:#fff;font-weight:900;font-size:16px;cursor:pointer} .btn-gradient{background:linear-gradient(90deg,#7c3aed,#f97316)} .chat-header{background:linear-gradient(90deg,#7c3aed,#f97316);color:#fff;padding:14px;border-radius:14px;font-weight:900;text-align:center} #messages{height:340px;overflow:auto;background:#faf5ff;border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px} .msg{max-width:85%;padding:11px 13px;background:#7c3aed;color:#fff;border-radius:6px;align-self:flex-end;border:2px solid #f97316;position:relative} .msg .dots{position:absolute;top:2px;left:4px;background:rgba(255,255,255,.25);border:0;color:#fff;font-size:18px;width:28px;height:28px;border-radius:50%;cursor:pointer} .msg .react{font-size:18px;margin-top:4px} .chat-input{display:flex;gap:8px;margin-top:10px} .chat-input input{flex:1} .send-btn{width:54px;height:54px;border-radius:50%;border:0;background:linear-gradient(135deg,#7c3aed,#f97316);color:#fff;font-size:22px;cursor:pointer;flex-shrink:0} .voice-opt{border:2px solid #ede9fe;border-radius:14px;padding:13px;margin:8px 0;cursor:pointer;font-weight:700} .voice-opt.selected{border-color:#f97316;background:#fff7ed} label{font-weight:900} .post{border:1px solid #eee;border-radius:16px;padding:12px;margin:10px 0} .friend{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #eee} .small{color:#666;font-size:14px} .voice-bar{background:#fff7ed;border:2px solid #f97316;border-radius:14px;padding:10px;margin:10px 0} .msg-menu{background:#fff;color:#222;border:1px solid #ddd;border-radius:12px;padding:8px;margin-top:8px;display:flex;gap:6px;flex-wrap:wrap} .msg-menu button{border:0;background:#eee;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:700} .reply-box{background:#fff7ed;border:1px solid #f97316;border-radius:10px;padding:8px;margin:6px 0;font-size:13px;color:#333}
+*{box-sizing:border-box;font-family:system-ui}body{margin:0;background:#ffeef5;color:#222}
+body.dark{background:#111;color:#fff}
+body.luxe{background:#0a0a0a;color:#e8c97a}
+body.luxe.dark{background:#000}
+.top{position:sticky;top:0;display:flex;gap:6px;padding:10px;background:inherit;z-index:10;flex-wrap:wrap;align-items:center}
+.top b{font-size:22px;flex:1}
+button{border:0;padding:9px 12px;border-radius:20px;cursor:pointer;font-weight:700}
+.pink{background:#ff4d8d;color:#fff}.gold{background:#d4af37;color:#000}.grey{background:#eee}.dark .grey{background:#333;color:#fff}
+.card{background:#fff;border-radius:16px;padding:12px;margin:10px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.dark .card,.luxe .card{background:#1c1c1c}
+input,select{width:100%;padding:11px;border-radius:12px;border:1px solid #ddd;margin:6px 0}
+.dark input,.dark select{background:#222;color:#fff}
+.hidden{display:none!important}
+.row{display:flex;gap:8px;align-items:center}
+.avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;background:#ffd1e3;flex-shrink:0}
+.luxe .avatar{background:#2a2300;border:2px solid #d4af37}
+.story{width:62px;text-align:center;font-size:12px}
+.story div{width:58px;height:58px;border-radius:50%;border:3px solid #ff4d8d;display:flex;align-items:center;justify-content:center;font-size:24px;background:#fff;margin:auto}
+.msg{padding:8px 12px;border-radius:16px;margin:6px 0;max-width:80%}
+.me{background:#ff4d8d;color:#fff;margin-left:auto}.other{background:#eee}.dark .other{background:#333}
+.badge{background:red;color:#fff;border-radius:50%;padding:2px 7px;font-size:12px}
+.tabs{display:flex;gap:6px;padding:0 10px}
 </style>
 </head>
-<body>
-<header>NOVA 🌍</header>
-<nav>
-<button onclick="show('home',this)" class="active">🏠 الرئيسية</button>
-<button onclick="show('explore',this)">🔍 استكشاف</button>
-<button onclick="show('chat',this)">💬 الدردشة</button>
-<button onclick="show('profile',this)">👤 ملفي</button>
-<button onclick="show('voice',this)">🎙️ الصوت واللغة</button>
-</nav>
-<div id="home" class="page active">
-<div class="card"><h2>أهلاً بيك بـ NOVA - كل العالم 🌍</h2><p>دردشة، أصدقاء، استكشاف، وصوت بكل لغات العالم.</p><button class="btn btn-gradient" onclick="show('voice',document.querySelectorAll('nav button')[4])">جرب أصوات العالم</button></div>
-<div class="card"><h3>📝 انشر شي</h3><textarea id="postText" placeholder="شنو ببالك اليوم؟"></textarea><button class="btn" onclick="addPost()">نشر</button><div id="myPosts"></div></div>
+<body id="body">
+
+<!-- 1 - تسجيل الدخول أولاً - ماكو إعدادات قبل الدخول -->
+<div id="login">
+<div class="top"><b>NOVA ✨</b></div>
+<div class="card" style="text-align:center">
+<h1>NOVA</h1><p>تطبيقك ومحادثاتك - نظيف ومرتب</p>
+<input id="lName" placeholder="الاسم - مثال: علي من العمارة">
+<input id="lEmail" placeholder="البريد الالكتروني">
+<input id="lPass" type="password" placeholder="كلمة السر">
+<select id="lCity"><option>العراق - العمارة</option><option>العراق - بغداد</option><option>السعودية - الرياض</option><option>مصر - القاهرة</option><option>تركيا - اسطنبول</option><option>الهند</option><option>باكستان</option><option>إيران</option><option>أخرى</option></select>
+<button class="pink" style="width:100%" onclick="doLogin()">دخول / انشاء حساب</button>
+<p style="font-size:12px">بالدخول انت توافق على الشروط والخصوصية</p>
 </div>
-<div id="explore" class="page"><div class="card"><h2>استكشاف 🌍</h2><input placeholder="ابحث..." oninput="filterExplore(this.value)"><div id="exploreList"><div class="post"><b>علي حسين 🇮🇶</b><p>اليوم الجو بالعمارة يخبل 😍</p></div><div class="post"><b>نوفا ✨</b><p>جربوا أصوات العالم كلها!</p></div><div class="post"><b>أحمد 🇪🇬</b><p>ازيكوا يا جماعة؟</p></div></div></div></div>
-<div id="chat" class="page">
-<div class="card"><h2>الدردشة</h2><input id="friendName" placeholder="اسم المستخدم - مثلاً: سارة"><button class="btn" onclick="openChat()">فتح المحادثة</button></div>
-<div class="card" id="chatBox" style="display:none"><div class="chat-header" id="chatTitle">محادثة</div>
-<div class="voice-bar"><b>🎙️ صوت هاي المحادثة:</b>
-<select id="chatDialect" onchange="changeChatVoice()"><option value="iraqi">🇮🇶 عراقي</option><option value="saudi">🇸🇦 سعودي</option><option value="egyptian">🇪🇬 مصري</option><option value="hindi">🇮🇳 هندي</option><option value="urdu">🇵🇰 باكستاني</option><option value="persian">🇮🇷 إيراني</option><option value="english">🇺🇸 English</option><option value="french">🇫🇷 فرنسي</option></select>
-<select id="chatVoiceType" onchange="changeChatVoice()"><option value="male">👨 رجالي</option><option value="female">👩 نسائي</option><option value="funny">😂 مضحك</option><option value="kid">🧒 طفل</option></select>
-<p class="small" id="chatVoiceLabel">الصوت الحالي: عراقي - رجالي ✅</p>
-<p class="small">💡 دوس على زر ⋮ اللي فوق الرسالة حتى يطلع التعديل والتفاعل</p></div>
-<div id="messages"></div><div id="replyPreview" class="reply-box" style="display:none"></div><div class="chat-input"><input id="msgInput" placeholder="اكتب رسالتك"><button class="send-btn" onclick="sendMsg()">➤</button></div>
-<button class="btn btn-gradient" style="margin-top:8px" onclick="speakLast()">🔊 اسمع آخر رسالة</button>
 </div>
-<div class="card"><h3>👥 الأصدقاء</h3><div id="friendsList"><div class="friend"><span>علي حسين 🇮🇶</span><button onclick="chatWith('علي حسين')">دردشة</button></div><div class="friend"><span>نوفا ✨</span><button onclick="chatWith('نوفا')">دردشة</button></div><div class="friend"><span>نور 🌸</span><button onclick="chatWith('نور')">دردشة</button></div></div></div>
+
+<!-- 2 - التطبيق بعد الدخول - يلا يطلع زر الإعدادات -->
+<div id="app" class="hidden">
+<div class="top">
+<b>NOVA</b>
+<button onclick="setTheme('pink')">💖 PinkyChat</button>
+<button onclick="setTheme('luxe')">🖤 SOCIALUXE</button>
+<button onclick="toggleBg()">🌗 خلفية</button>
+<button class="grey" onclick="openSettings()">⚙️ إعدادات</button>
 </div>
-<div id="profile" class="page"><div class="card"><h2>ملفي الشخصي</h2><input id="myName" value="مستخدم NOVA"><p>الاسم: <b id="profileName">مستخدم NOVA</b></p><p>البلد: العراق - العمارة</p><button class="btn btn-gradient" onclick="document.getElementById('profileName').innerText=document.getElementById('myName').value;alert('تم الحفظ')">حفظ</button></div></div>
-<div id="voice" class="page">
-<div class="card"><h2>🎙️ الصوت واللغة - كل العالم 🌍</h2>
-<label>1. اختر اللهجة:</label>
-<select id="dialect" onchange="selectDialect(this.value)">
-<option value="iraqi">🇮🇶 عراقي</option><option value="saudi">🇸🇦 سعودي</option><option value="kuwaiti">🇰🇼 كويتي</option><option value="egyptian">🇪🇬 مصري</option><option value="fusha">📖 فصحى</option><option value="hindi">🇮🇳 هندي</option><option value="urdu">🇵🇰 باكستاني</option><option value="persian">🇮🇷 إيراني - فارسي</option><option value="turkish">🇹🇷 تركي</option><option value="english">🇺🇸 انجليزي</option><option value="french">🇫🇷 فرنسي</option><option value="spanish">🇪🇸 إسباني</option><option value="german">🇩🇪 ألماني</option><option value="russian">🇷🇺 روسي</option><option value="chinese">🇨🇳 صيني</option><option value="japanese">🇯🇵 ياباني</option>
-</select>
-<label>2. اختر نوع الصوت:</label>
-<div class="voice-opt selected" onclick="selectVoice('male',this)">👨 رجالي</div>
-<div class="voice-opt" onclick="selectVoice('female',this)">👩 نسائي</div>
-<div class="voice-opt" onclick="selectVoice('funny',this)">😂 مضحك</div>
-<div class="voice-opt" onclick="selectVoice('kid',this)">🧒 طفل</div>
-<div class="voice-opt" onclick="selectVoice('old',this)">👴 كبير بالعمر</div>
-<label>3. سرعة:</label><select id="speed"><option value="0.7">بطيء</option><option value="1" selected>طبيعي</option><option value="1.4">سريع</option></select>
-<label>4. جرب:</label><input id="testText" value="هلا، شلونك؟ هذا صوت نوفا">
-<button class="btn btn-gradient" onclick="testVoice()">▶️ جرب الصوت هسه</button>
-<p id="voiceStatus" style="text-align:center;font-weight:800;color:#7c3aed"></p></div>
-<div class="card"><h3>اختيارك هسه:</h3><p id="currentChoice">اللهجة: عراقي | الصوت: رجالي</p></div>
+
+<div class="tabs">
+<button class="pink" onclick="showTab('home')">الرئيسية</button>
+<button class="grey" onclick="showTab('chats')">محادثات</button>
+<button class="grey" onclick="showTab('requests')">طلبات</button>
+<button class="grey" onclick="showTab('profile')">ملفي</button>
 </div>
+
+<!-- الرئيسية -->
+<div id="tab-home">
+<div class="card"><b>ستوريات</b><div class="row" style="overflow:auto;margin-top:8px">
+<div class="story"><div onclick="alert('اضافة ستوري صوتي 🎙️')">+</div>ستوري</div>
+<div class="story"><div>😍</div>نور</div><div class="story"><div>🔥</div>علي</div><div class="story"><div>🌹</div>سارة</div>
+</div></div>
+<div class="card"><input id="postText" placeholder="انشر منشور..."><button class="pink" onclick="addPost()">نشر</button><div id="posts"></div></div>
+</div>
+
+<!-- المحادثات + البحث السري -->
+<div id="tab-chats" class="hidden">
+<div class="card">
+<b>🔍 البحث في المحادثات</b>
+<input id="searchBox" placeholder="ابحث عن اسم... أو اكتب رمزك السري للمحادثة السرية" oninput="doSearch()">
+<p style="font-size:12px">💡 اكتب رمزك السري - مثال: 1234 - تطلع المحادثة السرية أول وحدة</p>
+<div id="chatList"></div>
+</div>
+<div class="card hidden" id="chatBox">
+<div class="row"><div class="avatar" id="chatAvatar">💬</div><b id="chatName"></b><button class="grey" onclick="closeChat()">خروج ❌ - تختفي السرية</button></div>
+<div id="messages"></div>
+<div class="row"><input id="msgInput" placeholder="اكتب رسالة..."><button class="pink" onclick="sendMsg()">ارسال</button></div>
+<div class="row"><button class="grey" onclick="alert('❤️🔥😂 - اسحب يمين رد، يسار حذف')">❤️ تفاعل</button><button class="grey" onclick="alert('🎙️ رد بالصوت السريع')">🎙️ رد صوتي</button><button class="grey" onclick="alert('رسالة تنفجر 💥')">💥 مفاجأة</button></div>
+</div>
+</div>
+
+<!-- طلبات -->
+<div id="tab-requests" class="hidden">
+<div class="card"><b>طلبات الصداقة</b><div class="row"><div class="avatar">👧</div><span style="flex:1">مريم - تريد تضيفك</span><button class="pink" onclick="this.parentElement.innerHTML='تم القبول ✅'">قبول ✅</button><button class="grey" onclick="this.parentElement.innerHTML='تم الرفض'">رفض ❌</button></div></div>
+<div class="card"><b>اقتراح أصدقاء</b><div class="row"><div class="avatar">👦</div><span style="flex:1">أحمد - قريب عليك 500 متر 📍</span><button class="pink">اضافة +</button></div></div>
+</div>
+
+<!-- ملفي -->
+<div id="tab-profile" class="hidden">
+<div class="card" style="text-align:center"><div class="avatar" id="myAvatar" style="width:90px;height:90px;font-size:40px;margin:auto">😍</div><h3 id="myName">حسابي</h3><p id="myCity"></p><button class="pink" onclick="alert('تم الحفظ ✅')">حفظ</button></div>
+</div>
+
+<!-- الإعدادات - تطلع بس بعد الدخول -->
+<div id="settings" class="card hidden">
+<h2>⚙️ إعدادات الحساب</h2>
+<b>حسابي</b>
+<input placeholder="تغيير الاسم"><input placeholder="تغيير البريد"><input type="password" placeholder="تغيير كلمة السر">
+<b>الشكل والاطار</b>
+<select onchange="document.getElementById('myAvatar').style.border=this.value"><option value="0">بدون اطار</option><option value="3px solid #ff4d8d">اطار وردي</option><option value="3px solid #d4af37">اطار ذهبي</option></select>
+<label><input type="checkbox" onchange="toggleHidePic(this)"> اخفاء الصورة</label>
+<b>الخصوصية</b>
+<select><option>حالة المتصل: متصل</option><option>غير متصل</option><option>مشغول</option><option>وضع الشبح 👻 - محد يشوفني</option></select>
+<label><input type="checkbox"> اخفاء الظهور</label>
+<label><input type="checkbox"> اخفاء الموقع</label>
+<b>🔒 المحادثة السرية</b>
+<input id="secretCode" value="1234" placeholder="رمزك السري - مثال 1234">
+<input id="secretName" value="انا وياك ❤️" placeholder="اسم المحادثة السرية">
+<select id="secretIcon"><option value="❤️">شعار: ❤️ قلب</option><option value="">بدون شعار</option><option value="👻">شعار: 👻 شبح</option><option value="☁️">شعار وهمي: ☁️ الطقس</option><option value="📦">شعار وهمي: 📦 شركة</option></select>
+<button class="pink" onclick="saveSecret()">حفظ المحادثة السرية</button>
+<b>الصوت واللغة</b>
+<select><option>اللغة: عراقي</option><option>سعودي</option><option>مصري</option><option>هندي</option><option>باكستاني</option><option>إيراني</option><option>انجليزي</option><option>فرنسي</option><option>تركي</option><option>صيني</option><option>ياباني</option></select>
+<select><option>الصوت: رجالي</option><option>نسائي</option><option>مضحك</option><option>طفل</option></select>
+<button class="grey" onclick="alert('🔊 جرب الصوت - هلا، شلونك؟')">جرب الصوت 🔊</button>
+<b>الدعم</b>
+<div class="row"><button class="grey" onclick="alert('المساعدة ❓ - تواصل معنا')">المساعدة ❓</button><button class="grey" onclick="alert('تم ارسال بلاغ ⚠️')">ابلاغ عن مشكلة ⚠️</button><button class="grey" onclick="alert('تم حث الحساب ✅')">حث الحساب ✅</button></div>
+<button class="grey" style="width:100%;margin-top:8px" onclick="alert('وضع الليل الهادئ 🌙 تفعّل')">🌙 وضع الليل الهادئ</button>
+<button style="background:#ffdddd;width:100%;margin-top:8px" onclick="if(confirm('متأكد حذف الحساب؟')) location.reload()">🗑️ الغاء / حذف الحساب</button>
+<button style="background:#000;color:#fff;width:100%;margin-top:8px" onclick="location.reload()">تسجيل خروج</button>
+<button class="grey" onclick="document.getElementById('settings').classList.add('hidden')">اغلاق</button>
+</div>
+</div>
+
 <script>
-let currentVoice='male', currentDialect='iraqi', chatDialect='iraqi', chatVoice='male', lastMsg='', replyTo='';
-let langMap={iraqi:['عراقي','ar-IQ','هلا شلونك؟ هذا صوت نوفا العراقي'],saudi:['سعودي','ar-SA','هلا والله'],kuwaiti:['كويتي','ar-KW','هلا شلونك'],egyptian:['مصري','ar-EG','ازيك؟'],fusha:['فصحى','ar-SA','السلام عليكم'],hindi:['هندي','hi-IN','नमस्ते'],urdu:['باكستاني','ur-PK','السلام علیکم'],persian:['إيراني','fa-IR','سلام چطوری'],turkish:['تركي','tr-TR','Merhaba'],english:['انجليزي','en-US','Hello'],french:['فرنسي','fr-FR','Bonjour'],spanish:['إسباني','es-ES','Hola'],german:['ألماني','de-DE','Hallo'],russian:['روسي','ru-RU','Привет'],chinese:['صيني','zh-CN','你好'],japanese:['ياباني','ja-JP','こんにちは']};
-function show(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active')}
-function openChat(){let n=document.getElementById('friendName').value||'سارة';document.getElementById('chatBox').style.display='block';document.getElementById('chatTitle').innerText='محادثة '+n;document.getElementById('messages').innerHTML=''}
-function chatWith(n){document.getElementById('friendName').value=n;openChat()}
-function sendMsg(){
-  let input=document.getElementById('msgInput');let v=input.value;if(!v)return;lastMsg=v;
-  let d=document.createElement('div');d.className='msg';
-  if(replyTo){let r=document.createElement('div');r.className='reply-box';r.innerText='↩️ رد على: '+replyTo;d.appendChild(r);replyTo='';document.getElementById('replyPreview').style.display='none';}
-  let dots=document.createElement('button');dots.className='dots';dots.innerText='⋮';
-  dots.onclick=(e)=>{e.stopPropagation();toggleMenu(d);};
-  d.appendChild(dots);
-  let span=document.createElement('span');span.className='msg-text';span.innerText=v;d.appendChild(span);
-  let reactDiv=document.createElement('div');reactDiv.className='react';d.appendChild(reactDiv);
-  document.getElementById('messages').appendChild(d);
-  input.value='';speakText(v,chatDialect,chatVoice);
-}
-function toggleMenu(msgEl){
-  let old=msgEl.querySelector('.msg-menu');if(old){old.remove();return;}
-  document.querySelectorAll('.msg-menu').forEach(m=>m.remove());
-  let menu=document.createElement('div');menu.className='msg-menu';
-  menu.innerHTML='<button onclick="addReact(this,\'❤️\')">❤️</button><button onclick="addReact(this,\'😂\')">😂</button><button onclick="addReact(this,\'😮\')">😮</button><button onclick="addReact(this,\'👍\')">👍</button><button onclick="editMsg(this)">✏️ تعديل</button><button onclick="replyMsg(this)">↩️ رد</button><button onclick="copyMsg(this)">📋 نسخ</button><button onclick="deleteMsg(this)">🗑️ حذف</button>';
-  msgEl.appendChild(menu);
-}
-function addReact(btn,emoji){let msg=btn.closest('.msg');msg.querySelector('.react').innerText=emoji;btn.closest('.msg-menu').remove();}
-function editMsg(btn){let msg=btn.closest('.msg');let txt=msg.querySelector('.msg-text');let nv=prompt('عدل رسالتك:',txt.innerText);if(nv!==null&&nv!==''){txt.innerText=nv;lastMsg=nv;}btn.closest('.msg-menu').remove();}
-function replyMsg(btn){let msg=btn.closest('.msg');replyTo=msg.querySelector('.msg-text').innerText;let p=document.getElementById('replyPreview');p.style.display='block';p.innerText='↩️ راح ترد على: '+replyTo+' - دوس هنا للالغاء';p.onclick=()=>{replyTo='';p.style.display='none';};document.getElementById('msgInput').focus();btn.closest('.msg-menu').remove();}
-function copyMsg(btn){let msg=btn.closest('.msg');navigator.clipboard.writeText(msg.querySelector('.msg-text').innerText);alert('تم النسخ ✅');btn.closest('.msg-menu').remove();}
-function deleteMsg(btn){if(confirm('تحذف هاي الرسالة؟')){btn.closest('.msg').remove();}btn.closest('.msg-menu')?.remove();}
-function searchF(v){if(!v)return;document.getElementById('friendsList').innerText='ما لگينا احد: '+v}
-function addPost(){let t=document.getElementById('postText').value;if(!t)return;let d=document.createElement('div');d.className='post';d.innerHTML='<b>أنت</b><p>'+t+'</p>';document.getElementById('myPosts').prepend(d);document.getElementById('postText').value=''}
-function filterExplore(v){document.querySelectorAll('#exploreList .post').forEach(p=>{p.style.display=p.innerText.includes(v)?'block':'none'})}
-function selectDialect(v){currentDialect=v;updateChoice()}
-function selectVoice(v,el){currentVoice=v;document.querySelectorAll('.voice-opt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');updateChoice()}
-function updateChoice(){let info=langMap[currentDialect]||['عراقي'];let vnames={male:'رجالي',female:'نسائي',funny:'مضحك',kid:'طفل',old:'كبير بالعمر'};document.getElementById('currentChoice').innerText='اللهجة: '+info[0]+' | الصوت: '+vnames[currentVoice]}
-function filterLang(v){let sel=document.getElementById('dialect');let opts=sel.querySelectorAll('option');opts.forEach(o=>{o.style.display=o.text.includes(v)||v==''?'block':'none'})}
-function speakText(txt,dialect,voice){speechSynthesis.cancel();let info=langMap[dialect]||langMap['iraqi'];let u=new SpeechSynthesisUtterance(txt);u.lang=info[1];u.pitch=voice==='female'?1.3:voice==='funny'?1.8:voice==='kid'?2.0:voice==='old'?0.5:0.8;u.rate=parseFloat(document.getElementById('speed')?.value||1);speechSynthesis.speak(u);}
-function testVoice(){let info=langMap[currentDialect]||langMap['iraqi'];let txt=document.getElementById('testText').value||info[2];speakText(txt,currentDialect,currentVoice);document.getElementById('voiceStatus').innerText='✅ جاي تسمع: '+info[0]+' - '+currentVoice;}
-function changeChatVoice(){chatDialect=document.getElementById('chatDialect').value;chatVoice=document.getElementById('chatVoiceType').value;let name=langMap[chatDialect]?.[0]||chatDialect;let vname={male:'رجالي',female:'نسائي',funny:'مضحك',kid:'طفل'}[chatVoice];document.getElementById('chatVoiceLabel').innerText='الصوت الحالي: '+name+' - '+vname+' ✅';speakText('هلا، هذا هو الصوت الجديد',chatDialect,chatVoice)}
-function speakLast(){if(!lastMsg){alert('اكتب رسالة أولاً');return}speakText(lastMsg,chatDialect,chatVoice)}
+let userName=""; let secretCode="1234"; let secretName="انا وياك ❤️"; let secretIcon="❤️";
+let chats=[{name:"نور",icon:"😍",last:"هلا شلونك؟",secret:false},{name:"علي",icon:"🔥",last:"تمام",secret:false},{name:"سارة",icon:"🌹",last:"🌹",secret:false}];
+let current=null;
+function doLogin(){ userName=document.getElementById('lName').value||"علي"; document.getElementById('login').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); document.getElementById('myName').innerText=userName; document.getElementById('myCity').innerText=document.getElementById('lCity').value; renderChats(); }
+function setTheme(t){ document.body.classList.remove('luxe'); if(t=='luxe') document.body.classList.add('luxe'); }
+function toggleBg(){ document.body.classList.toggle('dark'); }
+function showTab(t){ ['home','chats','requests','profile'].forEach(x=>document.getElementById('tab-'+x).classList.add('hidden')); document.getElementById('tab-'+t).classList.remove('hidden'); if(t=='chats') renderChats(); }
+function openSettings(){ document.getElementById('settings').classList.remove('hidden'); window.scrollTo(0,0); }
+function toggleHidePic(c){ document.getElementById('myAvatar').innerText=c.checked?'🙈':'😍'; }
+function saveSecret(){ secretCode=document.getElementById('secretCode').value||"1234"; secretName=document.getElementById('secretName').value; secretIcon=document.getElementById('secretIcon').value; alert('تم حفظ المحادثة السرية ✅ - اكتب الرمز بالبحث: '+secretCode); }
+function renderChats(list){ list=list||chats; document.getElementById('chatList').innerHTML=list.map((c,i)=>`<div class="row" style="padding:8px;border-bottom:1px solid #eee;cursor:pointer" onclick="openChat(${chats.indexOf(c)})"><div class="avatar">${c.icon}</div><div style="flex:1"><b>${c.name}</b><div style="font-size:12px">${c.last}</div></div>${c.secret?'<span class="badge">سري</span>':''}</div>`).join(''); }
+function doSearch(){ let v=document.getElementById('searchBox').value.trim(); if(v===secretCode){ let secret={name:secretName,icon:secretIcon||"💬",last:"محادثة سرية - اشعار مخصص بدون اسم",secret:true}; renderChats([secret,...chats]); } else if(v==""){ renderChats(); } else { renderChats(chats.filter(c=>c.name.includes(v))); } }
+function openChat(i){ let c = document.getElementById('searchBox').value.trim()===secretCode && i===0 ? {name:secretName,icon:secretIcon||"💬",secret:true} : chats[i]; if(!c) return; current=c; document.getElementById('chatBox').classList.remove('hidden'); document.getElementById('chatName').innerText=c.name; document.getElementById('chatAvatar').innerText=c.icon; document.getElementById('messages').innerHTML=`<div class="msg other">هلا، هاي محادثة ${c.name} ${c.secret?'🔒 سرية - تختفي بعد الخروج':''}</div>`; }
+function closeChat(){ document.getElementById('chatBox').classList.add('hidden'); document.getElementById('searchBox').value=""; renderChats(); alert('طلعت من المحادثة السرية - اختفت ✅ - اكتب الرمز مرة ثانية لترجع'); }
+function sendMsg(){ let v=document.getElementById('msgInput').value; if(!v) return; document.getElementById('messages').innerHTML+=`<div class="msg me">${v} <span style="font-size:10px">⋮ تعديل / حذف / ❤️ / نسخ / رد</span></div>`; document.getElementById('msgInput').value=""; }
+function addPost(){ let v=document.getElementById('postText').value; if(!v) return; document.getElementById('posts').innerHTML=`<div class="card">${v} <br>❤️ لايك | 💬 تعليق</div>`+document.getElementById('posts').innerHTML; document.getElementById('postText').value=""; }
 </script>
 </body>
 </html>
