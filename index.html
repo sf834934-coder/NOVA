@@ -30,6 +30,7 @@ label{font-weight:900}
 .post{border:1px solid #eee;border-radius:16px;padding:12px;margin:10px 0}
 .friend{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #eee}
 .small{color:#666;font-size:14px}
+.voice-bar{background:#fff7ed;border:2px solid #f97316;border-radius:14px;padding:10px;margin:10px 0}
 </style>
 </head>
 <body>
@@ -51,7 +52,38 @@ label{font-weight:900}
 
 <div id="chat" class="page">
 <div class="card"><h2>الدردشة</h2><input id="friendName" placeholder="اسم المستخدم - مثلاً: سارة"><button class="btn" onclick="openChat()">فتح المحادثة</button></div>
-<div class="card" id="chatBox" style="display:none"><div class="chat-header" id="chatTitle">محادثة</div><div id="messages"></div><div class="chat-input"><input id="msgInput" placeholder="اكتب رسالتك"><button class="send-btn" onclick="sendMsg()">➤</button></div></div>
+<div class="card" id="chatBox" style="display:none"><div class="chat-header" id="chatTitle">محادثة</div>
+
+<!-- ✅ هذا اللي ضفته لك من يمي - صوت داخل المحادثة -->
+<div class="voice-bar">
+<b>🎙️ صوت هاي المحادثة - تكدر تغيره هسه:</b>
+<select id="chatDialect" onchange="changeChatVoice()">
+<option value="iraqi">🇮🇶 عراقي</option>
+<option value="saudi">🇸🇦 سعودي</option>
+<option value="kuwaiti">🇰🇼 كويتي</option>
+<option value="egyptian">🇪🇬 مصري</option>
+<option value="hindi">🇮🇳 هندي</option>
+<option value="urdu">🇵🇰 باكستاني</option>
+<option value="persian">🇮🇷 إيراني</option>
+<option value="turkish">🇹🇷 تركي</option>
+<option value="english">🇺🇸 English</option>
+<option value="french">🇫🇷 فرنسي</option>
+<option value="chinese">🇨🇳 صيني</option>
+<option value="japanese">🇯🇵 ياباني</option>
+<option value="russian">🇷🇺 روسي</option>
+</select>
+<select id="chatVoiceType" onchange="changeChatVoice()">
+<option value="male">👨 رجالي</option>
+<option value="female">👩 نسائي</option>
+<option value="funny">😂 مضحك</option>
+<option value="kid">🧒 طفل</option>
+</select>
+<p class="small" id="chatVoiceLabel">الصوت الحالي: عراقي - رجالي ✅</p>
+</div>
+
+<div id="messages"></div><div class="chat-input"><input id="msgInput" placeholder="اكتب رسالتك"><button class="send-btn" onclick="sendMsg()">➤</button></div>
+<button class="btn btn-gradient" style="margin-top:8px" onclick="speakLast()">🔊 اسمع آخر رسالة بالصوت اللي اخترته</button>
+</div>
 <div class="card"><h3>👥 الأصدقاء</h3><input placeholder="ابحث عن صديق" oninput="searchF(this.value)"><div id="friendsList"><div class="friend"><span>علي حسين 🇮🇶</span><button onclick="chatWith('علي حسين')">دردشة</button></div><div class="friend"><span>نوفا ✨</span><button onclick="chatWith('نوفا')">دردشة</button></div><div class="friend"><span>نور 🌸</span><button onclick="chatWith('نور')">دردشة</button></div></div></div>
 </div>
 
@@ -121,17 +153,14 @@ label{font-weight:900}
 <option value="spanish_mx">🇲🇽 مكسيكي - إسباني</option>
 </optgroup>
 </select>
-
 <label>2. اختر نوع الصوت:</label>
 <div class="voice-opt selected" onclick="selectVoice('male',this)">👨 صوت رجالي - ثقيل</div>
 <div class="voice-opt" onclick="selectVoice('female',this)">👩 صوت نسائي - ناعم</div>
 <div class="voice-opt" onclick="selectVoice('funny',this)">😂 صوت مضحك</div>
 <div class="voice-opt" onclick="selectVoice('kid',this)">🧒 صوت طفل</div>
 <div class="voice-opt" onclick="selectVoice('old',this)">👴 صوت كبير بالعمر</div>
-
 <label>3. سرعة الصوت:</label>
 <select id="speed"><option value="0.7">بطيء</option><option value="1" selected>طبيعي</option><option value="1.4">سريع</option></select>
-
 <label>4. جرب:</label>
 <input id="testText" value="هلا، شلونك؟ هذا صوت نوفا من كل العالم">
 <button class="btn btn-gradient" onclick="testVoice()">▶️ جرب الصوت هسه</button>
@@ -142,11 +171,12 @@ label{font-weight:900}
 
 <script>
 let currentVoice='male', currentDialect='iraqi';
+let chatDialect='iraqi', chatVoice='male', lastMsg='';
 let langMap={iraqi:['عراقي','ar-IQ','هلا شلونك؟ هذا صوت نوفا العراقي'],saudi:['سعودي','ar-SA','هلا والله، شلونك؟ هذا صوت نوفا السعودي'],kuwaiti:['كويتي','ar-KW','هلا، شلونك؟ هذا صوت نوفا الكويتي'],emirati:['إماراتي','ar-AE','هلا، شو أخبارك؟'],qatari:['قطري','ar-QA','هلا، شحالك؟'],bahraini:['بحريني','ar-BH','هلا، شلونك؟'],omani:['عماني','ar-OM','هلا، كيف حالك؟'],yemeni:['يمني','ar-YE','هلا، كيف انت؟'],jordanian:['أردني','ar-JO','هلا، كيفك؟'],egyptian:['مصري','ar-EG','ازيك؟ عامل ايه؟ ده صوت نوفا المصري'],levant:['سوري / لبناني','ar-SY','كيفك؟ شو أخبارك؟'],palestinian:['فلسطيني','ar-PS','كيفك؟ شو أخبارك؟'],moroccan:['مغربي','ar-MA','لاباس عليك؟'],algerian:['جزائري','ar-DZ','واش راك؟'],tunisian:['تونسي','ar-TN','شنحوالك؟'],libyan:['ليبي','ar-LY','شن حالك؟'],sudanese:['سوداني','ar-SD','كيفك؟'],fusha:['فصحى','ar-SA','السلام عليكم، كيف حالك؟ هذا صوت نوفا'],hindi:['هندي','hi-IN','नमस्ते, कैसे हो? यह नोवा की आवाज़ है'],urdu:['باكستاني - أوردو','ur-PK','السلام علیکم، آپ کیسے ہیں؟ یہ نووا کی آواز ہے'],persian:['إيراني - فارسي','fa-IR','سلام، چطوری؟ این صدای نووا است'],bengali:['بنغالي','bn-BD','হ্যালো, কেমন আছো?'],turkish:['تركي','tr-TR','Merhaba, nasılsın? Bu NOVA sesi'],kurdish:['كردي','ckb-IQ','سڵاو، چۆنی؟ ئەمە دەنگی نۆڤایە'],pashto:['أفغاني','ps-AF','سلام، څنګه یې؟'],chinese:['صيني','zh-CN','你好，你怎么样？这是NOVA的声音'],japanese:['ياباني','ja-JP','こんにちは、元気ですか？これはNOVAの声です'],korean:['كوري','ko-KR','안녕하세요, 잘 지내세요? 이것은 NOVA 목소리입니다'],thai:['تايلندي','th-TH','สวัสดี สบายดีไหม? นี่คือเสียง NOVA'],vietnamese:['فيتنامي','vi-VN','Xin chào, bạn khỏe không? Đây là giọng nói của NOVA'],indonesian:['إندونيسي','id-ID','Halo, apa kabar? Ini suara NOVA'],filipino:['فلبيني','fil-PH','Kamusta, kumusta ka? Ito ang boses ng NOVA'],english:['إنجليزي','en-US','Hello, how are you? This is NOVA voice'],english_uk:['إنجليزي بريطاني','en-GB','Hello, how are you? This is NOVA voice'],french:['فرنسي','fr-FR','Bonjour, comment allez-vous? Cest la voix de NOVA'],spanish:['إسباني','es-ES','Hola, ¿cómo estás? Esta es la voz de NOVA'],german:['ألماني','de-DE','Hallo, wie geht es dir? Das ist die Stimme von NOVA'],italian:['إيطالي','it-IT','Ciao, come stai? Questa è la voce di NOVA'],portuguese:['برتغالي','pt-PT','Olá, como estás? Esta é a voz da NOVA'],russian:['روسي','ru-RU','Привет, как дела? Это голос NOVA'],dutch:['هولندي','nl-NL','Hallo, hoe gaat het? Dit is de stem van NOVA'],swedish:['سويدي','sv-SE','Hej, hur mår du? Det här är NOVA röst'],swahili:['سواحيلي','sw-KE','Jambo, habari yako? Hii ni sauti ya NOVA'],amharic:['أمهرية','am-ET','ሰላም, እንዴት ነህ?'],somali:['صومالي','so-SO','Salaan, sidee tahay?'],portuguese_br:['برازيلي','pt-BR','Olá, tudo bem? Esta é a voz da NOVA'],spanish_mx:['مكسيكي','es-MX','Hola, ¿cómo estás? Esta es la voz de NOVA']};
 function show(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active')}
 function openChat(){let n=document.getElementById('friendName').value||'سارة';document.getElementById('chatBox').style.display='block';document.getElementById('chatTitle').innerText='محادثة '+n;document.getElementById('messages').innerHTML=''}
 function chatWith(n){document.getElementById('friendName').value=n;openChat()}
-function sendMsg(){let v=document.getElementById('msgInput').value;if(!v)return;let d=document.createElement('div');d.className='msg';d.innerText=v;document.getElementById('messages').appendChild(d);document.getElementById('msgInput').value=''}
+function sendMsg(){let v=document.getElementById('msgInput').value;if(!v)return;lastMsg=v;let d=document.createElement('div');d.className='msg';d.innerText=v;document.getElementById('messages').appendChild(d);document.getElementById('msgInput').value='';speakText(v,chatDialect,chatVoice)}
 function searchF(v){if(!v)return;document.getElementById('friendsList').innerText='ما لگينا احد: '+v}
 function addPost(){let t=document.getElementById('postText').value;if(!t)return;let d=document.createElement('div');d.className='post';d.innerHTML='<b>أنت</b><p>'+t+'</p>';document.getElementById('myPosts').prepend(d);document.getElementById('postText').value=''}
 function filterExplore(v){document.querySelectorAll('#exploreList .post').forEach(p=>{p.style.display=p.innerText.includes(v)?'block':'none'})}
@@ -155,6 +185,10 @@ function selectVoice(v,el){currentVoice=v;document.querySelectorAll('.voice-opt'
 function updateChoice(){let info=langMap[currentDialect]||['عراقي'];let vnames={male:'رجالي',female:'نسائي',funny:'مضحك',kid:'طفل',old:'كبير بالعمر'};document.getElementById('currentChoice').innerText='اللهجة: '+info[0]+' | الصوت: '+vnames[currentVoice]}
 function filterLang(v){let sel=document.getElementById('dialect');let opts=sel.querySelectorAll('option');opts.forEach(o=>{o.style.display=o.text.includes(v)||v==''?'block':'none'})}
 function testVoice(){let info=langMap[currentDialect]||langMap['iraqi'];let u=new SpeechSynthesisUtterance(info[2]);u.lang=info[1];u.rate=parseFloat(document.getElementById('speed').value);u.pitch=currentVoice==='female'?1.3:currentVoice==='funny'?1.8:currentVoice==='kid'?2.0:currentVoice==='old'?0.5:0.8;speechSynthesis.speak(u);document.getElementById('voiceStatus').innerText='✅ جاي تسمع: '+info[0]+' - '+currentVoice}
+// ✅ دوال جديدة ضفتها لك - صوت داخل المحادثة
+function changeChatVoice(){chatDialect=document.getElementById('chatDialect').value;chatVoice=document.getElementById('chatVoiceType').value;let name=langMap[chatDialect]?.[0]||chatDialect;let vname={male:'رجالي',female:'نسائي',funny:'مضحك',kid:'طفل'}[chatVoice];document.getElementById('chatVoiceLabel').innerText='الصوت الحالي: '+name+' - '+vname+' ✅';speakText('هلا، هذا هو الصوت الجديد',chatDialect,chatVoice)}
+function speakText(txt,dialect,voice){let info=langMap[dialect]||langMap['iraqi'];let u=new SpeechSynthesisUtterance(txt);u.lang=info[1];u.pitch=voice==='female'?1.3:voice==='funny'?1.8:voice==='kid'?2.0:0.8;speechSynthesis.speak(u)}
+function speakLast(){if(!lastMsg){alert('اكتب رسالة أولاً');return}speakText(lastMsg,chatDialect,chatVoice)}
 </script>
 </body>
 </html>
