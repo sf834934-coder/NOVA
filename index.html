@@ -1,74 +1,209 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NOVA V4</title>
-<style>*{box-sizing:border-box;font-family:system-ui}body{margin:0;background:#fff7f9}body.dark{background:#111;color:#fff}
-.page{display:none;padding:12px;padding-bottom:90px}.page.active{display:block}
-.header{position:sticky;top:0;background:inherit;padding:12px;z-index:20;border-bottom:1px solid #eee}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;padding:8px;gap:4px;border-top:1px solid #eee;z-index:30}.dark .bottom{background:#1c1c1c}
-.bottom button{flex:1;background:none;font-size:12px;padding:8px}.bottom button.on{background:#ff4d8d;color:#fff;border-radius:14px}
-button{border:0;padding:10px 14px;border-radius:20px;cursor:pointer;font-weight:700}.pink{background:#ff4d8d;color:#fff}.grey{background:#eee}.dark .grey{background:#333;color:#fff}
-.card{background:#fff;border-radius:16px;padding:12px;margin:10px 0;box-shadow:0 1px 5px #eee}.dark .card{background:#1c1c1c;box-shadow:none}
-input,select{width:100%;padding:11px;border-radius:12px;border:1px solid #ddd;margin:6px 0}.dark input{background:#222;color:#fff}
-.row{display:flex;gap:8px;align-items:center}.avatar{width:48px;height:48px;border-radius:50%;background:#ffd1e3;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-/* ستوري صغير مرتب - احمر جديد ابيض مشاهد */
-.story{width:68px;text-align:center;font-size:12px;flex-shrink:0}.story .ring{width:58px;height:58px;border-radius:50%;border:3px solid #ff0000;display:flex;align-items:center;justify-content:center;font-size:24px;background:#fff;margin:auto}.story.seen .ring{border-color:#e5e5e5}
-.msg{padding:10px 14px;border-radius:18px;margin:6px 0;max-width:80%}.me{background:#ff4d8d;color:#fff;margin-left:auto}.other{background:#f1f1f1}.dark .other{background:#333}
-</style></head><body>
-
-<!-- LOGIN - تأكد انسان + كود للبريد -->
-<div id="loginPage" class="page active"><div class="card" style="text-align:center;margin-top:20px"><h1>✨ اهلا بيك</h1><p>سجل دخول - تأكد انك صاحب البريد</p>
-<input id="lName" placeholder="اسمك - مثال: احمد"><input id="lEmail" placeholder="البريد الالكتروني"><input id="lPass" type="password" placeholder="كلمة سر - 8 احرف على الاقل">
-<button class="pink" style="width:100%" onclick="sendCode()">ارسال كود التأكيد للبريد 📧</button>
-<div id="codeBox" style="display:none"><p>وصلتك كلمة سر للبريد؟ اكتبها هنا<br>للتجربة الكود هو <b>123456</b></p><input id="codeInput" placeholder="كود البريد - 123456">
-<label style="display:flex;gap:8px;align-items:center;justify-content:center"><input type="checkbox" id="robot" style="width:20px"> ✅ تأكد انك انسان - انا لست روبوت</label>
-<button class="pink" style="width:100%" onclick="verifyLogin()">تأكيد ودخول ✅</button></div>
-<p id="loginMsg" style="color:red"></p><p style="font-size:12px;color:#888">لازم تثبت انك انسان + انك صاحب البريد، يلا ندخلك</p></div></div>
-
-<div id="app" style="display:none">
-<div class="header"><div class="row"><div class="avatar" id="topAvatar">👤</div><div style="flex:1"><b id="topName">المستخدم</b><div style="font-size:12px;color:#888">ملفي الشخصي</div></div><button class="grey" onclick="go('settings')">⚙️ الإعدادات</button></div>
-<div class="row" style="margin-top:8px"><button class="pink" onclick="toggleBg()">🌗 خلفية</button><button class="grey" onclick="setTheme('luxe')">🖤 SOCIALUXE</button></div></div>
-
-<!-- الستوريات وحدها -->
-<div id="page-stories" class="page"><h2>📸 الستوريات</h2>
-<div class="row" style="overflow:auto"><div class="story" onclick="viewStory(this,'قصتك')"><div class="ring">+</div>قصتك</div><div class="story" onclick="viewStory(this,'سارة')"><div class="ring">😍</div>سارة</div><div class="story" onclick="viewStory(this,'احمد')"><div class="ring">😎</div>احمد</div><div class="story seen" onclick="viewStory(this,'فاطمة')"><div class="ring">🌹</div>فاطمة</div><div class="story seen" onclick="viewStory(this,'عمر')"><div class="ring">🔥</div>عمر</div></div>
-<div class="card" id="storyView" style="display:none;text-align:center"><div style="font-size:60px" id="storyIcon">😍</div><h3 id="storyName"></h3><p>الستوري - قبل ساعتين</p><button class="pink" onclick="showInteractions()">👁️ شوف التفاعل والمشاهدات</button><div id="interBox" style="display:none;text-align:right;margin-top:10px"><b>👁️ 125 مشاهدة - ❤️ 48 تفاعل</b><div class="row" style="margin-top:8px"><div class="avatar">😍</div><span style="flex:1">سارة احمد</span><span>❤️ تفاعل</span></div><div class="row"><div class="avatar">😎</div><span style="flex:1">خالد العلي</span><span>👁️ شاهد</span></div><div class="row"><div class="avatar">🌹</div><span style="flex:1">ريم محمد</span><span>❤️ تفاعل</span></div></div></div>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA</title>
+<style>
+*{box-sizing:border-box}
+body{ margin:0; background:#10131c; color:#f4f5f8; font-family:Arial,sans-serif; }
+header{ padding:18px; text-align:center; background:#171b26; border-bottom:1px solid #292f40; }
+header h1{margin:0;color:#65aaff}
+header p{color:#aeb8ca;margin:8px 0 0}
+nav{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; padding:12px; background:#171b26; }
+button{ border:0; border-radius:10px; padding:11px 15px; background:#293449; color:white; cursor:pointer; }
+button.active,button.primary{ background:#347fc9; }
+main{ max-width:850px; margin:auto; padding:15px; }
+.page{display:none}
+.page.active{display:block}
+.card{ background:#191f2d; border:1px solid #293247; border-radius:14px; padding:15px; margin-bottom:14px; }
+input,textarea,select{ width:100%; padding:12px; margin:7px 0; border-radius:9px; border:1px solid #39445a; background:#101722; color:white; font-size:15px; }
+textarea{min-height:90px;resize:vertical}
+h2{color:#65aaff}
+small,.muted{color:#aeb8ca}
+.post{white-space:pre-wrap;line-height:1.7}
+footer{ text-align:center; padding:20px; color:#aeb8ca; }
+#chat .card{ padding:0; overflow:hidden; border:1px solid #3a2a5a; }
+#chat h2{ margin:0; padding:16px; text-align:center; color:white; background:linear-gradient(135deg,#6a1b9a,#ff6a00); border-radius:14px 14px 0 0; }
+#chat #friendName{ margin:12px; width:calc(100% - 24px); }
+#chat .card > button{ margin:0 12px 12px; }
+#chatBox{ background:#1a1030; padding:12px; border-radius:0 0 14px 14px; }
+#chatTitle{ margin:0 0 12px 0; padding:14px; text-align:center; color:white; background:linear-gradient(135deg,#7b1fa2,#ff7a00); border-radius:10px; font-size:17px; box-shadow:0 4px 14px rgba(255,106,0,.25); }
+#messages{ display:flex; flex-direction:column; gap:10px; max-height:380px; overflow-y:auto; padding:4px; }
+.message{ background:#2a1a4a; border-radius:6px; padding:12px 14px; margin:0; max-width:85%; align-self:flex-start; color:#fff; line-height:1.7; border-right:3px solid #ff6a00; box-shadow:0 2px 8px rgba(0,0,0,.25); white-space:pre-wrap; }
+.message:nth-child(even){ background:#3a1a1a; align-self:flex-end; border-right:none; border-left:3px solid #a855f7; }
+.message button{ display:block; margin-top:8px; background:#ff6a00; font-size:13px; padding:7px 10px; border-radius:6px; }
+#messageText{ background:#22153a; border:1px solid #4a2a6a; color:white; min-height:55px; border-radius:12px; }
+#chatBox > button:last-child{ background:linear-gradient(135deg,#7b1fa2,#ff6a00); width:56px; height:56px; border-radius:50%; font-size:18px; font-weight:bold; box-shadow:0 0 18px rgba(255,106,0,.6); margin:auto; display:block; }
+.hidden{ display:none !important; }
+</style>
+</head>
+<body>
+<header>
+<h1>NOVA</h1>
+<p>عالم يجمعنا باحترام</p>
+</header>
+<nav>
+<button class="active" onclick="showPage('home',this)">الرئيسية</button>
+<button onclick="showPage('explore',this)">استكشاف</button>
+<button onclick="showPage('chat',this)">الدردشة</button>
+<button onclick="showPage('profile',this)">ملفي الشخصي</button>
+<button onclick="showPage('voiceSettings',this)">الصوت واللغة</button>
+<button onclick="showPage('contact',this)">تواصل معنا</button>
+</nav>
+<main>
+<section id="home" class="page active">
+<div class="card">
+<h2>الاستوريات</h2>
+<div id="stories">لا توجد استوريات حالياً</div>
 </div>
-
-<!-- المحادثات وحدها - بره ماكو متصل -->
-<div id="page-chats" class="page"><h2>💬 المحادثات</h2><div class="card"><input id="searchBox" placeholder="ابحث اسم... او اكتب رمزك السري 1234" oninput="doSearch()"><div id="chatList"></div></div>
-<div class="card" id="chatBox" style="display:none"><div class="row"><div class="avatar" id="chatAvatar">💬</div><div style="flex:1"><b id="chatName"></b><div style="font-size:12px;color:#888" id="chatStatus"></div></div><button class="grey" onclick="closeChat()">خروج ❌</button></div><div id="messages"></div><div class="row"><input id="msgInput" placeholder="اكتب..."><button class="pink" onclick="sendMsg()">ارسال ➤</button></div></div></div>
-
-<!-- جهات الاتصال -->
-<div id="page-contacts" class="page"><h2>👥 جهات الاتصال</h2><div class="card"><input placeholder="ابحث..."></div><div class="card"><div class="row"><div class="avatar">😍</div><div style="flex:1"><b>نور</b></div><button class="pink" onclick="go('chats')">محادثة</button></div></div><div class="card"><div class="row"><div class="avatar">🔥</div><div style="flex:1"><b>علي</b></div><button class="pink" onclick="go('chats')">محادثة</button></div></div><div class="card"><b>طلبات الصداقة</b><div class="row"><div class="avatar">👧</div><span style="flex:1">مريم - تريد تضيفك</span><button class="pink">قبول ✅</button><button class="grey">رفض ❌</button></div></div></div>
-
-<!-- ملفي -->
-<div id="page-profile" class="page"><h2>👤 ملفي</h2><div class="card" style="text-align:center"><div class="avatar" style="width:90px;height:90px;font-size:40px;margin:auto" id="profileAvatar">👤</div><h3 id="myName"></h3><p>العمارة - العراق</p></div></div>
-
-<!-- الإعدادات وحدها - محفوظة 100% -->
-<div id="page-settings" class="page"><h2>⚙️ الإعدادات</h2>
-<div class="card"><b>حسابي</b><input placeholder="تغيير الاسم"><input placeholder="تغيير البريد"><input type="password" placeholder="تغيير كلمة السر"></div>
-<div class="card"><b>الشكل</b><select><option>اطار بدون</option><option>اطار وردي</option><option>اطار ذهبي</option></select></div>
-<div class="card"><b>الخصوصية</b><select><option>متصل</option><option>غير متصل</option><option>وضع الشبح 👻</option></select><p style="font-size:12px;color:#888">اختر متى يبين آخر ظهورك - بس جوه المحادثة</p></div>
-<div class="card"><b>🔒 المحادثة السرية</b><input id="secretCode" value="1234"><input id="secretName" value="انا وياك ❤️"><select id="secretIcon"><option value="❤️">شعار ❤️</option><option value="">بدون شعار</option><option value="👻">شعار 👻</option><option value="☁️">وهمي ☁️ الطقس</option></select><button class="pink" onclick="saveSecret()">حفظ</button></div>
-<div class="card"><b>اللغة والصوت</b><select><option>عراقي</option><option>سعودي</option><option>مصري</option><option>هندي</option><option>انجليزي</option></select></div>
-<div class="card"><button class="grey" style="width:100%">🌙 وضع الليل الهادئ</button><button style="width:100%;background:#ffdddd;margin-top:8px" onclick="location.reload()">🗑️ حذف الحساب</button></div>
+<div class="card">
+<h2>ما يخطر ببالك اليوم؟</h2>
+<textarea id="postText" placeholder="شارك مجتمع نوفا..."></textarea>
+<button class="primary" onclick="publishPost()">نشر</button>
 </div>
-
-<div class="bottom"><button id="btn-stories" onclick="go('stories')">📸<br>ستوريات</button><button id="btn-chats" onclick="go('chats')">💬<br>محادثات</button><button id="btn-contacts" onclick="go('contacts')">👥<br>جهات اتصال</button><button id="btn-profile" onclick="go('profile')">👤<br>ملفي</button><button id="btn-settings" onclick="go('settings')">⚙️<br>إعدادات</button></div>
+<div id="posts"></div>
+</section>
+<section id="explore" class="page">
+<div class="card">
+<h2>استكشاف</h2>
+<input id="searchText" placeholder="ابحث عن منشور">
+<button onclick="searchPosts()">بحث</button>
 </div>
+<div id="searchResults"></div>
+</section>
+<section id="chat" class="page">
+<div class="card">
+<h2>الدردشة</h2>
+<input id="friendName" placeholder="اسم المستخدم">
+<button onclick="openChat()">فتح المحادثة</button>
+<div id="chatBox" class="hidden">
+<h3 id="chatTitle">المحادثة</h3>
+<div id="messages"></div>
+<textarea id="messageText" placeholder="اكتب رسالتك"></textarea>
+<button onclick="sendMessage()">➤ إرسال</button>
+</div>
+</div>
+</section>
+<section id="profile" class="page">
+<div class="card">
+<h2>ملفي الشخصي</h2>
+<input id="nameInput" placeholder="اسمك">
+<button onclick="saveName()">حفظ الاسم</button>
+<p>نقاطي: <span id="pointCount">0</span></p>
+</div>
+</section>
+<section id="voiceSettings" class="page">
+<div class="card">
+<h2>إعدادات الصوت واللغة 🔊</h2>
+<label>بلد المستخدم</label>
+<select id="country">
+<option value="IQ">العراق</option>
+<option value="EG">مصر</option>
+<option value="SA">السعودية</option>
+<option value="KW">الكويت</option>
+<option value="AE">الإمارات</option>
+</select>
+<label>لغة القراءة</label>
+<select id="voiceLanguage">
+<option value="ar">العربية</option>
+<option value="en">English</option>
+<option value="tr">Türkçe</option>
+</select>
+<label>اللهجة</label>
+<select id="voiceDialect">
+<option value="iraqi">العراقية</option>
+<option value="egyptian">المصرية</option>
+<option value="saudi">السعودية</option>
+<option value="gulf">الخليجية</option>
+<option value="formal">الفصحى</option>
+</select>
+<label>سرعة القراءة</label>
+<input type="range" id="voiceSpeed" min="0.5" max="2" step="0.1" value="1">
+<button class="primary" onclick="saveVoiceSettings()">حفظ الإعدادات</button>
+<button onclick="testVoice()">تجربة الصوت</button>
+<h3>إعدادات الإشعارات</h3>
+<label><input type="checkbox" checked onchange="novaNotifications.enabled=this.checked;saveNotificationSettings()"> تشغيل الإشعارات</label><br><br>
+<label><input type="checkbox" checked onchange="novaNotifications.sound=this.checked;saveNotificationSettings()"> تشغيل صوت الإشعارات</label><br><br>
+<button onclick="saveNotificationSettings()"> حفظ إعدادات الإشعارات </button>
+<button onclick="showNovaNotification('هذا إشعار تجريبي من نوفا')"> تجربة الإشعار </button>
+<p id="voiceStatus" class="muted"></p>
+</div>
+</section>
 
+<section id="contact" class="page">
+<div class="card">
+<h2>تواصل معنا 📩</h2>
+<p class="muted">اكتب رسالتك وراح توصلي مباشرة على الايميل</p>
+<form id="contact-form">
+<input type="text" name="from_name" placeholder="اسمك" required>
+<input type="email" name="from_email" placeholder="ايميلك" required>
+<input type="hidden" name="to_name" value="NOVA">
+<textarea name="message" placeholder="اكتب رسالتك هنا..." required></textarea>
+<button class="primary" type="submit" id="contact-btn">ارسال الرسالة</button>
+<p id="contact-status" class="muted"></p>
+</form>
+</div>
+</section>
+
+</main>
 <script>
-let secretCode="1234",secretName="انا وياك ❤️",secretIcon="❤️";
-let chats=[{name:"نور",icon:"😍",last:"هلا بيك",status:"متصل الآن 🟢"},{name:"علي",icon:"🔥",last:"تمام",status:"آخر ظهور اليوم 9:41 م"},{name:"سارة",icon:"🌹",last:"🌹",status:"آخر ظهور منذ 5 دقائق"}];
-function sendCode(){let e=document.getElementById('lEmail').value,p=document.getElementById('lPass').value,n=document.getElementById('lName').value; if(!n){document.getElementById('loginMsg').innerText='اكتب اسمك';return} if(!e.includes('@')){document.getElementById('loginMsg').innerText='اكتب بريد صحيح';return} if(p.length<8){document.getElementById('loginMsg').innerText='كلمة السر لازم 8 احرف';return} document.getElementById('codeBox').style.display='block'; document.getElementById('loginMsg').innerText='تم ارسال كلمة سر 123456 لبريدك - تأكد انك صاحب البريد 📧';}
-function verifyLogin(){ if(document.getElementById('codeInput').value!="123456"){document.getElementById('loginMsg').innerText='الكود غلط - انت مو صاحب البريد';return} if(!document.getElementById('robot').checked){document.getElementById('loginMsg').innerText='لازم تأكد انك انسان - دوس انا لست روبوت';return} document.getElementById('loginPage').classList.remove('active'); document.getElementById('app').style.display='block'; let n=document.getElementById('lName').value; document.getElementById('myName').innerText=n; document.getElementById('topName').innerText=n; go('stories'); renderChats(); }
-function go(p){['stories','chats','contacts','profile','settings'].forEach(x=>{document.getElementById('page-'+x).classList.remove('active'); document.getElementById('btn-'+x).classList.remove('on');}); document.getElementById('page-'+p).classList.add('active'); document.getElementById('btn-'+p).classList.add('on'); window.scrollTo(0,0);}
-function toggleBg(){document.body.classList.toggle('dark');} function setTheme(t){document.body.classList.remove('luxe');}
-function viewStory(el,name){el.classList.add('seen'); document.getElementById('storyView').style.display='block'; document.getElementById('storyName').innerText=name; document.getElementById('storyIcon').innerText=name=='سارة'?'😍':name=='احمد'?'😎':'😍'; document.getElementById('interBox').style.display='none';}
-function showInteractions(){document.getElementById('interBox').style.display='block';}
-function saveSecret(){secretCode=document.getElementById('secretCode').value; secretName=document.getElementById('secretName').value; secretIcon=document.getElementById('secretIcon').value; alert('تم حفظ السرية ✅');}
-function renderChats(list){list=list||chats; document.getElementById('chatList').innerHTML=list.map((c,i)=>`<div class="row" style="padding:10px;border-bottom:1px solid #eee" onclick="openChat(${chats.indexOf(c)})"><div class="avatar">${c.icon}</div><div style="flex:1"><b>${c.name}</b><div style="font-size:12px;color:#888">${c.last}</div></div><span style="font-size:12px;color:#888">9:41 م</span></div>`).join('');}
-function doSearch(){let v=document.getElementById('searchBox').value.trim(); if(v===secretCode)renderChats([{name:secretName,icon:secretIcon||"💬",last:"سرية",status:"سرية 🔒"},...chats]); else if(v=="")renderChats(); else renderChats(chats.filter(c=>c.name.includes(v)));}
-function openChat(i){let c=document.getElementById('searchBox').value.trim()===secretCode&&i===0?{name:secretName,icon:secretIcon||"💬",status:"سرية 🔒",secret:true}:chats[i]; document.getElementById('chatBox').style.display='block'; document.getElementById('chatName').innerText=c.name; document.getElementById('chatAvatar').innerText=c.icon; document.getElementById('chatStatus').innerText=c.status; document.getElementById('messages').innerHTML=`<div class="msg other">هلا - ${c.name}</div>`;}
-function closeChat(){document.getElementById('chatBox').style.display='none'; document.getElementById('searchBox').value=""; renderChats();}
-function sendMsg(){let v=document.getElementById('msgInput').value; if(!v)return; document.getElementById('messages').innerHTML+=`<div class="msg me">${v}</div>`; document.getElementById('msgInput').value="";}
-</script></body></html>
+const defaults={ name:"", points:0, posts:[], stories:[], messages:{} };
+let data;
+try{ data=JSON.parse(localStorage.getItem("novaData"))||defaults; }catch(e){data=defaults;}
+function save(){ localStorage.setItem("novaData",JSON.stringify(data)); updateProfile(); }
+function showPage(id,btn){ document.querySelectorAll(".page").forEach(p=>{ p.classList.remove("active"); }); document.getElementById(id).classList.add("active"); document.querySelectorAll("nav button").forEach(b=>{ b.classList.remove("active"); }); btn.classList.add("active"); }
+function publishPost(){ let input=document.getElementById("postText"); let text=input.value.trim(); if(!text)return; data.posts.unshift({ name:data.name||"عضو نوفا", text:text, time:new Date().toLocaleString("ar") }); data.points+=2; input.value=""; save(); renderPosts(); }
+function renderPosts(){ let box=document.getElementById("posts"); box.innerHTML=""; data.posts.forEach(p=>{ let card=document.createElement("div"); card.className="card"; card.textContent=p.name+" : "+p.text; box.appendChild(card); }); }
+function searchPosts(){ let q=document.getElementById("searchText").value.toLowerCase(); let box=document.getElementById("searchResults"); box.innerHTML=""; data.posts.filter(p=>p.text.toLowerCase().includes(q)).forEach(p=>{ let el=document.createElement("div"); el.className="card"; el.textContent=p.name+" : "+p.text; box.appendChild(el); }); }
+function openChat(){ let name=document.getElementById("friendName").value.trim(); if(!name)return; data.messages[name]=data.messages[name]||[]; document.getElementById("chatBox").classList.remove("hidden"); document.getElementById("chatTitle").textContent="محادثة "+name; renderMessages(name); }
+function renderMessages(name){ let box=document.getElementById("messages"); box.innerHTML=""; (data.messages[name]||[]).forEach(m=>{ let el=document.createElement("div"); el.className="message"; el.textContent=m.text; let read=document.createElement("button"); read.textContent="🔊 اقرأ بصوت"; read.onclick=()=>speakText(m.text); el.appendChild(read); box.appendChild(el); }); }
+function sendMessage(){ let name=document.getElementById("friendName").value.trim(); let input=document.getElementById("messageText"); let text=input.value.trim(); if(!name||!text)return; data.messages[name]=data.messages[name]||[]; data.messages[name].push({text:text}); data.points++; input.value=""; save(); renderMessages(name); }
+function saveName(){ let name=document.getElementById("nameInput").value.trim(); if(!name)return; data.name=name; save(); }
+function updateProfile(){ document.getElementById("pointCount").textContent=data.points; document.getElementById("nameInput").value=data.name||""; }
+function saveVoiceSettings(){ let settings={ country:document.getElementById("country").value, language:document.getElementById("voiceLanguage").value, dialect:document.getElementById("voiceDialect").value, speed:document.getElementById("voiceSpeed").value }; localStorage.setItem("novaVoiceSettings",JSON.stringify(settings)); document.getElementById("voiceStatus").textContent="تم حفظ إعدادات الصوت بنجاح"; }
+function speakText(text){ if(!("speechSynthesis" in window)){ alert("الصوت غير مدعوم بهذا الجهاز"); return; } let settings=JSON.parse(localStorage.getItem("novaVoiceSettings")||"{}"); let speech=new SpeechSynthesisUtterance(text); speech.lang=settings.language==="en"?"en-US":"ar"; speech.rate=Number(settings.speed)||1; speechSynthesis.cancel(); speechSynthesis.speak(speech); }
+function testVoice(){ speakText("مرحباً بك في نوفا، عالم يجمعنا باحترام"); }
+let novaNotifications = JSON.parse( localStorage.getItem("novaNotifications") || '{"enabled":true,"sound":true}' );
+function saveNotificationSettings(){ localStorage.setItem( "novaNotifications", JSON.stringify(novaNotifications) ); }
+function showNovaNotification(message){ if(!novaNotifications.enabled) return; alert("🔔 إشعار من NOVA\n" + message); if(novaNotifications.sound){ try{ let audio = new Audio( "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=" ); audio.play(); }catch(e){} } }
+renderPosts(); updateProfile();
+</script>
+<div id="friendsPage" style="display:block; padding:15px;">
+<h2 style="color:white;">الاصدقاء</h2>
+<input id="searchBox" type="text" placeholder="ابحث باسم المستخدم @ali_123" style="width:100%; padding:12px; border-radius:10px; border:none; background:#2a2a2a; color:white; margin:10px 0;" oninput="doSearch()" />
+<div id="results"></div>
+<h3 style="color:white; margin-top:20px;">طلبات الصداقة</h3>
+<div id="requests" style="background:#1a1a1a; padding:10px; border-radius:10px; color:#aaa;"> لا توجد طلبات حاليا </div>
+</div>
+<script>
+let users = [ {name:"علي حسين", user:"ali_123"}, {name:"نوفا", user:"nova_ali"}, {name:"نور", user:"noor.2026"} ];
+function doSearch(){ let val = document.getElementById("searchBox").value.toLowerCase().replace("@",""); let box = document.getElementById("results"); box.innerHTML = ""; if(val === "") return; let found = users.filter(u => u.user.toLowerCase().startsWith(val)); if(found.length === 0){ box.innerHTML = "<p style='color:#aaa;'>ما لگينا احد بهذا الاسم</p>"; return; } found.forEach(u => { box.innerHTML += ` <div style="background:#1a1a1a; padding:10px; border-radius:10px; margin:5px 0; display:flex; justify-content:space-between; align-items:center;"> <div> <b style="color:white;">${u.name}</b><br> <span style="color:#888;">@${u.user}</span> </div> <button onclick="addFriend('${u.user}')" style="background:#00c853; color:white; border:none; padding:8px 12px; border-radius:8px;">اضافة صديق</button> </div> `; }); }
+function addFriend(user){ alert("تم ارسال طلب صداقة الى @" + user); }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+emailjs.init("uPGaDFUQFAKBYhQ3Z");
+document.getElementById("contact-form").addEventListener("submit", function(e){
+  e.preventDefault();
+  var btn = document.getElementById("contact-btn");
+  var status = document.getElementById("contact-status");
+  btn.textContent = "جاري الارسال...";
+  btn.disabled = true;
+  emailjs.sendForm("service_cyoqi34", "template_r45tuhg", this)
+    .then(function(){
+      status.textContent = "تم ارسال رسالتك بنجاح ✅";
+      document.getElementById("contact-form").reset();
+      btn.textContent = "ارسال الرسالة";
+      btn.disabled = false;
+    }, function(){
+      status.textContent = "صار خطأ، حاول مرة ثانية ❌";
+      btn.textContent = "ارسال الرسالة";
+      btn.disabled = false;
+    });
+});
+</script>
+
+</body>
+</html>
