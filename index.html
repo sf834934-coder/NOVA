@@ -136,9 +136,7 @@
 <div class="card"><h3>اختيارك هسه:</h3><p id="currentChoice">اللهجة: عراقي | الصوت: رجالي</p><p class="small">عدد اللغات: 45+ لغة ولهجة من كل العالم 🌍</p></div>
 </div>
 <script>
-// ✅ تمت إضافة مفتاح VoiceRSS هنا
 const VOICERSS_API_KEY = "e743331ed40f416e9637e899f84a8d7a";
-
 let currentVoice='male', currentDialect='iraqi';
 let chatDialect='iraqi', chatVoice='male', lastMsg='';
 let langMap={iraqi:['عراقي','ar-IQ','هلا شلونك؟ هذا صوت نوفا العراقي'],saudi:['سعودي','ar-SA','هلا والله، شلونك؟ هذا صوت نوفا السعودي'],kuwaiti:['كويتي','ar-KW','هلا، شلونك؟ هذا صوت نوفا الكويتي'],emirati:['إماراتي','ar-AE','هلا، شو أخبارك؟'],qatari:['قطري','ar-QA','هلا، شحالك؟'],bahraini:['بحريني','ar-BH','هلا، شلونك؟'],omani:['عماني','ar-OM','هلا، كيف حالك؟'],yemeni:['يمني','ar-YE','هلا، كيف انت؟'],jordanian:['أردني','ar-JO','هلا، كيفك؟'],egyptian:['مصري','ar-EG','ازيك؟ عامل ايه؟ ده صوت نوفا المصري'],levant:['سوري / لبناني','ar-SY','كيفك؟ شو أخبارك؟'],palestinian:['فلسطيني','ar-PS','كيفك؟ شو أخبارك؟'],moroccan:['مغربي','ar-MA','لاباس عليك؟'],algerian:['جزائري','ar-DZ','واش راك؟'],tunisian:['تونسي','ar-TN','شنحوالك؟'],libyan:['ليبي','ar-LY','شن حالك؟'],sudanese:['سوداني','ar-SD','كيفك؟'],fusha:['فصحى','ar-SA','السلام عليكم، كيف حالك؟ هذا صوت نوفا'],hindi:['هندي','hi-IN','नमस्ते, कैसे हो? यह नोवा की आवाज़ है'],urdu:['باكستاني - أوردو','ur-PK','السلام علیکم، آپ کیسے ہیں؟ یہ نووا کی آواز ہے'],persian:['إيراني - فارسي','fa-IR','سلام، چطوری؟ این صدای نووا است'],bengali:['بنغالي','bn-BD','হ্যালো, কেমন আছো?'],turkish:['تركي','tr-TR','Merhaba, nasılsın? Bu NOVA sesi'],kurdish:['كردي','ckb-IQ','سڵاو، چۆنی؟ ئەمە دەنگی نۆڤایە'],pashto:['أفغاني','ps-AF','سلام، څنګه یې؟'],chinese:['صيني','zh-CN','你好，你怎么样？这是NOVA的声音'],japanese:['ياباني','ja-JP','こんにちは、元気ですか？これはNOVAの声です'],korean:['كوري','ko-KR','안녕하세요, 잘 지내세요? 이것은 NOVA 목소리입니다'],thai:['تايلندي','th-TH','สวัสดี สบายดีไหม? นี่คือเสียง NOVA'],vietnamese:['فيتنامي','vi-VN','Xin chào, bạn khỏe không? Đây là giọng nói của NOVA'],indonesian:['إندونيسي','id-ID','Halo, apa kabar? Ini suara NOVA'],filipino:['فلبيني','fil-PH','Kamusta, kumusta ka? Ito ang boses ng NOVA'],english:['إنجليزي','en-US','Hello, how are you? This is NOVA voice'],english_uk:['إنجليزي بريطاني','en-GB','Hello, how are you? This is NOVA voice'],french:['فرنسي','fr-FR','Bonjour, comment allez-vous? Cest la voix de NOVA'],spanish:['إسباني','es-ES','Hola, ¿cómo estás? Esta es la voz de NOVA'],german:['ألماني','de-DE','Hallo, wie geht es dir? Das ist die Stimme von NOVA'],italian:['إيطالي','it-IT','Ciao, come stai? Questa è la voce di NOVA'],portuguese:['برتغالي','pt-PT','Olá, como estás? Esta é a voz da NOVA'],russian:['روسي','ru-RU','Привет, как дела? Это голос NOVA'],dutch:['هولندي','nl-NL','Hallo, hoe gaat het? Dit is de stem van NOVA'],swedish:['سويدي','sv-SE','Hej, hur mår du? Det här är NOVA röst'],swahili:['سواحيلي','sw-KE','Jambo, habari yako? Hii ni sauti ya NOVA'],amharic:['أمهرية','am-ET','ሰላም, እንዴት ነህ?'],somali:['صومالي','so-SO','Salaan, sidee tahay?'],portuguese_br:['برازيلي','pt-BR','Olá, tudo bem? Esta é a voz da NOVA'],spanish_mx:['مكسيكي','es-MX','Hola, ¿cómo estás? Esta es la voz de NOVA']};
@@ -153,18 +151,15 @@ function selectDialect(v){currentDialect=v;updateChoice()}
 function selectVoice(v,el){currentVoice=v;document.querySelectorAll('.voice-opt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');updateChoice()}
 function updateChoice(){let info=langMap[currentDialect]||['عراقي'];let vnames={male:'رجالي',female:'نسائي',funny:'مضحك',kid:'طفل',old:'كبير بالعمر'};document.getElementById('currentChoice').innerText='اللهجة: '+info[0]+' | الصوت: '+vnames[currentVoice]}
 function filterLang(v){let sel=document.getElementById('dialect');let opts=sel.querySelectorAll('option');opts.forEach(o=>{o.style.display=o.text.includes(v)||v==''?'block':'none'})}
-
-// ✅ دالة VoiceRSS الجديدة - تستخدم المفتاح اللي ضفته
 function speakWithVoiceRSS(text, langCode, voiceType){
-  // VoiceRSS: رجالي = Mike, نسائي = Amy, طفل = John مع سرعة مختلفة
+  let hl = langCode;
+  if(hl.startsWith('ar-')) hl = 'ar-eg';
+  if(hl.startsWith('ckb')) hl = 'ar-eg';
   let v = 'Mike';
   if(voiceType==='female') v='Amy';
   if(voiceType==='kid') v='John';
   if(voiceType==='funny') v='Mike';
-  let rate = 0;
-  if(voiceType==='funny') rate = 2;
-  if(voiceType==='kid') rate = 1;
-  let src = 'https://api.voicerss.org/?key=' + VOICERSS_API_KEY + '&hl=' + langCode + '&v=' + v + '&src=' + encodeURIComponent(text) + '&r=' + rate + '&c=MP3&f=44khz_16bit_stereo';
+  let src = 'https://api.voicerss.org/?key=' + VOICERSS_API_KEY + '&hl=' + hl + '&v=' + v + '&src=' + encodeURIComponent(text) + '&r=0&c=MP3&f=44khz_16bit_stereo';
   let a = new Audio(src);
   a.play().catch(()=>{ fallbackSpeak(text, langCode, voiceType); });
 }
