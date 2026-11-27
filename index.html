@@ -1,150 +1,74 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NOVA - PinkyChat / SOCIALUXE</title>
-<style>
-*{box-sizing:border-box;font-family:system-ui}body{margin:0;background:#ffeef5;color:#222}
-body.dark{background:#111;color:#fff}
-body.luxe{background:#0a0a0a;color:#e8c97a}
-body.luxe.dark{background:#000}
-.top{position:sticky;top:0;display:flex;gap:6px;padding:10px;background:inherit;z-index:10;flex-wrap:wrap;align-items:center}
-.top b{font-size:22px;flex:1}
-button{border:0;padding:9px 12px;border-radius:20px;cursor:pointer;font-weight:700}
-.pink{background:#ff4d8d;color:#fff}.gold{background:#d4af37;color:#000}.grey{background:#eee}.dark .grey{background:#333;color:#fff}
-.card{background:#fff;border-radius:16px;padding:12px;margin:10px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
-.dark .card,.luxe .card{background:#1c1c1c}
-input,select{width:100%;padding:11px;border-radius:12px;border:1px solid #ddd;margin:6px 0}
-.dark input,.dark select{background:#222;color:#fff}
-.hidden{display:none!important}
-.row{display:flex;gap:8px;align-items:center}
-.avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;background:#ffd1e3;flex-shrink:0}
-.luxe .avatar{background:#2a2300;border:2px solid #d4af37}
-.story{width:62px;text-align:center;font-size:12px}
-.story div{width:58px;height:58px;border-radius:50%;border:3px solid #ff4d8d;display:flex;align-items:center;justify-content:center;font-size:24px;background:#fff;margin:auto}
-.msg{padding:8px 12px;border-radius:16px;margin:6px 0;max-width:80%}
-.me{background:#ff4d8d;color:#fff;margin-left:auto}.other{background:#eee}.dark .other{background:#333}
-.badge{background:red;color:#fff;border-radius:50%;padding:2px 7px;font-size:12px}
-.tabs{display:flex;gap:6px;padding:0 10px}
-</style>
-</head>
-<body id="body">
+<html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NOVA V4</title>
+<style>*{box-sizing:border-box;font-family:system-ui}body{margin:0;background:#fff7f9}body.dark{background:#111;color:#fff}
+.page{display:none;padding:12px;padding-bottom:90px}.page.active{display:block}
+.header{position:sticky;top:0;background:inherit;padding:12px;z-index:20;border-bottom:1px solid #eee}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;padding:8px;gap:4px;border-top:1px solid #eee;z-index:30}.dark .bottom{background:#1c1c1c}
+.bottom button{flex:1;background:none;font-size:12px;padding:8px}.bottom button.on{background:#ff4d8d;color:#fff;border-radius:14px}
+button{border:0;padding:10px 14px;border-radius:20px;cursor:pointer;font-weight:700}.pink{background:#ff4d8d;color:#fff}.grey{background:#eee}.dark .grey{background:#333;color:#fff}
+.card{background:#fff;border-radius:16px;padding:12px;margin:10px 0;box-shadow:0 1px 5px #eee}.dark .card{background:#1c1c1c;box-shadow:none}
+input,select{width:100%;padding:11px;border-radius:12px;border:1px solid #ddd;margin:6px 0}.dark input{background:#222;color:#fff}
+.row{display:flex;gap:8px;align-items:center}.avatar{width:48px;height:48px;border-radius:50%;background:#ffd1e3;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+/* ستوري صغير مرتب - احمر جديد ابيض مشاهد */
+.story{width:68px;text-align:center;font-size:12px;flex-shrink:0}.story .ring{width:58px;height:58px;border-radius:50%;border:3px solid #ff0000;display:flex;align-items:center;justify-content:center;font-size:24px;background:#fff;margin:auto}.story.seen .ring{border-color:#e5e5e5}
+.msg{padding:10px 14px;border-radius:18px;margin:6px 0;max-width:80%}.me{background:#ff4d8d;color:#fff;margin-left:auto}.other{background:#f1f1f1}.dark .other{background:#333}
+</style></head><body>
 
-<!-- 1 - تسجيل الدخول أولاً - ماكو إعدادات قبل الدخول -->
-<div id="login">
-<div class="top"><b>NOVA ✨</b></div>
-<div class="card" style="text-align:center">
-<h1>NOVA</h1><p>تطبيقك ومحادثاتك - نظيف ومرتب</p>
-<input id="lName" placeholder="الاسم - مثال: علي من العمارة">
-<input id="lEmail" placeholder="البريد الالكتروني">
-<input id="lPass" type="password" placeholder="كلمة السر">
-<select id="lCity"><option>العراق - العمارة</option><option>العراق - بغداد</option><option>السعودية - الرياض</option><option>مصر - القاهرة</option><option>تركيا - اسطنبول</option><option>الهند</option><option>باكستان</option><option>إيران</option><option>أخرى</option></select>
-<button class="pink" style="width:100%" onclick="doLogin()">دخول / انشاء حساب</button>
-<p style="font-size:12px">بالدخول انت توافق على الشروط والخصوصية</p>
-</div>
+<!-- LOGIN - تأكد انسان + كود للبريد -->
+<div id="loginPage" class="page active"><div class="card" style="text-align:center;margin-top:20px"><h1>✨ اهلا بيك</h1><p>سجل دخول - تأكد انك صاحب البريد</p>
+<input id="lName" placeholder="اسمك - مثال: احمد"><input id="lEmail" placeholder="البريد الالكتروني"><input id="lPass" type="password" placeholder="كلمة سر - 8 احرف على الاقل">
+<button class="pink" style="width:100%" onclick="sendCode()">ارسال كود التأكيد للبريد 📧</button>
+<div id="codeBox" style="display:none"><p>وصلتك كلمة سر للبريد؟ اكتبها هنا<br>للتجربة الكود هو <b>123456</b></p><input id="codeInput" placeholder="كود البريد - 123456">
+<label style="display:flex;gap:8px;align-items:center;justify-content:center"><input type="checkbox" id="robot" style="width:20px"> ✅ تأكد انك انسان - انا لست روبوت</label>
+<button class="pink" style="width:100%" onclick="verifyLogin()">تأكيد ودخول ✅</button></div>
+<p id="loginMsg" style="color:red"></p><p style="font-size:12px;color:#888">لازم تثبت انك انسان + انك صاحب البريد، يلا ندخلك</p></div></div>
+
+<div id="app" style="display:none">
+<div class="header"><div class="row"><div class="avatar" id="topAvatar">👤</div><div style="flex:1"><b id="topName">المستخدم</b><div style="font-size:12px;color:#888">ملفي الشخصي</div></div><button class="grey" onclick="go('settings')">⚙️ الإعدادات</button></div>
+<div class="row" style="margin-top:8px"><button class="pink" onclick="toggleBg()">🌗 خلفية</button><button class="grey" onclick="setTheme('luxe')">🖤 SOCIALUXE</button></div></div>
+
+<!-- الستوريات وحدها -->
+<div id="page-stories" class="page"><h2>📸 الستوريات</h2>
+<div class="row" style="overflow:auto"><div class="story" onclick="viewStory(this,'قصتك')"><div class="ring">+</div>قصتك</div><div class="story" onclick="viewStory(this,'سارة')"><div class="ring">😍</div>سارة</div><div class="story" onclick="viewStory(this,'احمد')"><div class="ring">😎</div>احمد</div><div class="story seen" onclick="viewStory(this,'فاطمة')"><div class="ring">🌹</div>فاطمة</div><div class="story seen" onclick="viewStory(this,'عمر')"><div class="ring">🔥</div>عمر</div></div>
+<div class="card" id="storyView" style="display:none;text-align:center"><div style="font-size:60px" id="storyIcon">😍</div><h3 id="storyName"></h3><p>الستوري - قبل ساعتين</p><button class="pink" onclick="showInteractions()">👁️ شوف التفاعل والمشاهدات</button><div id="interBox" style="display:none;text-align:right;margin-top:10px"><b>👁️ 125 مشاهدة - ❤️ 48 تفاعل</b><div class="row" style="margin-top:8px"><div class="avatar">😍</div><span style="flex:1">سارة احمد</span><span>❤️ تفاعل</span></div><div class="row"><div class="avatar">😎</div><span style="flex:1">خالد العلي</span><span>👁️ شاهد</span></div><div class="row"><div class="avatar">🌹</div><span style="flex:1">ريم محمد</span><span>❤️ تفاعل</span></div></div></div>
 </div>
 
-<!-- 2 - التطبيق بعد الدخول - يلا يطلع زر الإعدادات -->
-<div id="app" class="hidden">
-<div class="top">
-<b>NOVA</b>
-<button onclick="setTheme('pink')">💖 PinkyChat</button>
-<button onclick="setTheme('luxe')">🖤 SOCIALUXE</button>
-<button onclick="toggleBg()">🌗 خلفية</button>
-<button class="grey" onclick="openSettings()">⚙️ إعدادات</button>
-</div>
+<!-- المحادثات وحدها - بره ماكو متصل -->
+<div id="page-chats" class="page"><h2>💬 المحادثات</h2><div class="card"><input id="searchBox" placeholder="ابحث اسم... او اكتب رمزك السري 1234" oninput="doSearch()"><div id="chatList"></div></div>
+<div class="card" id="chatBox" style="display:none"><div class="row"><div class="avatar" id="chatAvatar">💬</div><div style="flex:1"><b id="chatName"></b><div style="font-size:12px;color:#888" id="chatStatus"></div></div><button class="grey" onclick="closeChat()">خروج ❌</button></div><div id="messages"></div><div class="row"><input id="msgInput" placeholder="اكتب..."><button class="pink" onclick="sendMsg()">ارسال ➤</button></div></div></div>
 
-<div class="tabs">
-<button class="pink" onclick="showTab('home')">الرئيسية</button>
-<button class="grey" onclick="showTab('chats')">محادثات</button>
-<button class="grey" onclick="showTab('requests')">طلبات</button>
-<button class="grey" onclick="showTab('profile')">ملفي</button>
-</div>
-
-<!-- الرئيسية -->
-<div id="tab-home">
-<div class="card"><b>ستوريات</b><div class="row" style="overflow:auto;margin-top:8px">
-<div class="story"><div onclick="alert('اضافة ستوري صوتي 🎙️')">+</div>ستوري</div>
-<div class="story"><div>😍</div>نور</div><div class="story"><div>🔥</div>علي</div><div class="story"><div>🌹</div>سارة</div>
-</div></div>
-<div class="card"><input id="postText" placeholder="انشر منشور..."><button class="pink" onclick="addPost()">نشر</button><div id="posts"></div></div>
-</div>
-
-<!-- المحادثات + البحث السري -->
-<div id="tab-chats" class="hidden">
-<div class="card">
-<b>🔍 البحث في المحادثات</b>
-<input id="searchBox" placeholder="ابحث عن اسم... أو اكتب رمزك السري للمحادثة السرية" oninput="doSearch()">
-<p style="font-size:12px">💡 اكتب رمزك السري - مثال: 1234 - تطلع المحادثة السرية أول وحدة</p>
-<div id="chatList"></div>
-</div>
-<div class="card hidden" id="chatBox">
-<div class="row"><div class="avatar" id="chatAvatar">💬</div><b id="chatName"></b><button class="grey" onclick="closeChat()">خروج ❌ - تختفي السرية</button></div>
-<div id="messages"></div>
-<div class="row"><input id="msgInput" placeholder="اكتب رسالة..."><button class="pink" onclick="sendMsg()">ارسال</button></div>
-<div class="row"><button class="grey" onclick="alert('❤️🔥😂 - اسحب يمين رد، يسار حذف')">❤️ تفاعل</button><button class="grey" onclick="alert('🎙️ رد بالصوت السريع')">🎙️ رد صوتي</button><button class="grey" onclick="alert('رسالة تنفجر 💥')">💥 مفاجأة</button></div>
-</div>
-</div>
-
-<!-- طلبات -->
-<div id="tab-requests" class="hidden">
-<div class="card"><b>طلبات الصداقة</b><div class="row"><div class="avatar">👧</div><span style="flex:1">مريم - تريد تضيفك</span><button class="pink" onclick="this.parentElement.innerHTML='تم القبول ✅'">قبول ✅</button><button class="grey" onclick="this.parentElement.innerHTML='تم الرفض'">رفض ❌</button></div></div>
-<div class="card"><b>اقتراح أصدقاء</b><div class="row"><div class="avatar">👦</div><span style="flex:1">أحمد - قريب عليك 500 متر 📍</span><button class="pink">اضافة +</button></div></div>
-</div>
+<!-- جهات الاتصال -->
+<div id="page-contacts" class="page"><h2>👥 جهات الاتصال</h2><div class="card"><input placeholder="ابحث..."></div><div class="card"><div class="row"><div class="avatar">😍</div><div style="flex:1"><b>نور</b></div><button class="pink" onclick="go('chats')">محادثة</button></div></div><div class="card"><div class="row"><div class="avatar">🔥</div><div style="flex:1"><b>علي</b></div><button class="pink" onclick="go('chats')">محادثة</button></div></div><div class="card"><b>طلبات الصداقة</b><div class="row"><div class="avatar">👧</div><span style="flex:1">مريم - تريد تضيفك</span><button class="pink">قبول ✅</button><button class="grey">رفض ❌</button></div></div></div>
 
 <!-- ملفي -->
-<div id="tab-profile" class="hidden">
-<div class="card" style="text-align:center"><div class="avatar" id="myAvatar" style="width:90px;height:90px;font-size:40px;margin:auto">😍</div><h3 id="myName">حسابي</h3><p id="myCity"></p><button class="pink" onclick="alert('تم الحفظ ✅')">حفظ</button></div>
+<div id="page-profile" class="page"><h2>👤 ملفي</h2><div class="card" style="text-align:center"><div class="avatar" style="width:90px;height:90px;font-size:40px;margin:auto" id="profileAvatar">👤</div><h3 id="myName"></h3><p>العمارة - العراق</p></div></div>
+
+<!-- الإعدادات وحدها - محفوظة 100% -->
+<div id="page-settings" class="page"><h2>⚙️ الإعدادات</h2>
+<div class="card"><b>حسابي</b><input placeholder="تغيير الاسم"><input placeholder="تغيير البريد"><input type="password" placeholder="تغيير كلمة السر"></div>
+<div class="card"><b>الشكل</b><select><option>اطار بدون</option><option>اطار وردي</option><option>اطار ذهبي</option></select></div>
+<div class="card"><b>الخصوصية</b><select><option>متصل</option><option>غير متصل</option><option>وضع الشبح 👻</option></select><p style="font-size:12px;color:#888">اختر متى يبين آخر ظهورك - بس جوه المحادثة</p></div>
+<div class="card"><b>🔒 المحادثة السرية</b><input id="secretCode" value="1234"><input id="secretName" value="انا وياك ❤️"><select id="secretIcon"><option value="❤️">شعار ❤️</option><option value="">بدون شعار</option><option value="👻">شعار 👻</option><option value="☁️">وهمي ☁️ الطقس</option></select><button class="pink" onclick="saveSecret()">حفظ</button></div>
+<div class="card"><b>اللغة والصوت</b><select><option>عراقي</option><option>سعودي</option><option>مصري</option><option>هندي</option><option>انجليزي</option></select></div>
+<div class="card"><button class="grey" style="width:100%">🌙 وضع الليل الهادئ</button><button style="width:100%;background:#ffdddd;margin-top:8px" onclick="location.reload()">🗑️ حذف الحساب</button></div>
 </div>
 
-<!-- الإعدادات - تطلع بس بعد الدخول -->
-<div id="settings" class="card hidden">
-<h2>⚙️ إعدادات الحساب</h2>
-<b>حسابي</b>
-<input placeholder="تغيير الاسم"><input placeholder="تغيير البريد"><input type="password" placeholder="تغيير كلمة السر">
-<b>الشكل والاطار</b>
-<select onchange="document.getElementById('myAvatar').style.border=this.value"><option value="0">بدون اطار</option><option value="3px solid #ff4d8d">اطار وردي</option><option value="3px solid #d4af37">اطار ذهبي</option></select>
-<label><input type="checkbox" onchange="toggleHidePic(this)"> اخفاء الصورة</label>
-<b>الخصوصية</b>
-<select><option>حالة المتصل: متصل</option><option>غير متصل</option><option>مشغول</option><option>وضع الشبح 👻 - محد يشوفني</option></select>
-<label><input type="checkbox"> اخفاء الظهور</label>
-<label><input type="checkbox"> اخفاء الموقع</label>
-<b>🔒 المحادثة السرية</b>
-<input id="secretCode" value="1234" placeholder="رمزك السري - مثال 1234">
-<input id="secretName" value="انا وياك ❤️" placeholder="اسم المحادثة السرية">
-<select id="secretIcon"><option value="❤️">شعار: ❤️ قلب</option><option value="">بدون شعار</option><option value="👻">شعار: 👻 شبح</option><option value="☁️">شعار وهمي: ☁️ الطقس</option><option value="📦">شعار وهمي: 📦 شركة</option></select>
-<button class="pink" onclick="saveSecret()">حفظ المحادثة السرية</button>
-<b>الصوت واللغة</b>
-<select><option>اللغة: عراقي</option><option>سعودي</option><option>مصري</option><option>هندي</option><option>باكستاني</option><option>إيراني</option><option>انجليزي</option><option>فرنسي</option><option>تركي</option><option>صيني</option><option>ياباني</option></select>
-<select><option>الصوت: رجالي</option><option>نسائي</option><option>مضحك</option><option>طفل</option></select>
-<button class="grey" onclick="alert('🔊 جرب الصوت - هلا، شلونك؟')">جرب الصوت 🔊</button>
-<b>الدعم</b>
-<div class="row"><button class="grey" onclick="alert('المساعدة ❓ - تواصل معنا')">المساعدة ❓</button><button class="grey" onclick="alert('تم ارسال بلاغ ⚠️')">ابلاغ عن مشكلة ⚠️</button><button class="grey" onclick="alert('تم حث الحساب ✅')">حث الحساب ✅</button></div>
-<button class="grey" style="width:100%;margin-top:8px" onclick="alert('وضع الليل الهادئ 🌙 تفعّل')">🌙 وضع الليل الهادئ</button>
-<button style="background:#ffdddd;width:100%;margin-top:8px" onclick="if(confirm('متأكد حذف الحساب؟')) location.reload()">🗑️ الغاء / حذف الحساب</button>
-<button style="background:#000;color:#fff;width:100%;margin-top:8px" onclick="location.reload()">تسجيل خروج</button>
-<button class="grey" onclick="document.getElementById('settings').classList.add('hidden')">اغلاق</button>
-</div>
+<div class="bottom"><button id="btn-stories" onclick="go('stories')">📸<br>ستوريات</button><button id="btn-chats" onclick="go('chats')">💬<br>محادثات</button><button id="btn-contacts" onclick="go('contacts')">👥<br>جهات اتصال</button><button id="btn-profile" onclick="go('profile')">👤<br>ملفي</button><button id="btn-settings" onclick="go('settings')">⚙️<br>إعدادات</button></div>
 </div>
 
 <script>
-let userName=""; let secretCode="1234"; let secretName="انا وياك ❤️"; let secretIcon="❤️";
-let chats=[{name:"نور",icon:"😍",last:"هلا شلونك؟",secret:false},{name:"علي",icon:"🔥",last:"تمام",secret:false},{name:"سارة",icon:"🌹",last:"🌹",secret:false}];
-let current=null;
-function doLogin(){ userName=document.getElementById('lName').value||"علي"; document.getElementById('login').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); document.getElementById('myName').innerText=userName; document.getElementById('myCity').innerText=document.getElementById('lCity').value; renderChats(); }
-function setTheme(t){ document.body.classList.remove('luxe'); if(t=='luxe') document.body.classList.add('luxe'); }
-function toggleBg(){ document.body.classList.toggle('dark'); }
-function showTab(t){ ['home','chats','requests','profile'].forEach(x=>document.getElementById('tab-'+x).classList.add('hidden')); document.getElementById('tab-'+t).classList.remove('hidden'); if(t=='chats') renderChats(); }
-function openSettings(){ document.getElementById('settings').classList.remove('hidden'); window.scrollTo(0,0); }
-function toggleHidePic(c){ document.getElementById('myAvatar').innerText=c.checked?'🙈':'😍'; }
-function saveSecret(){ secretCode=document.getElementById('secretCode').value||"1234"; secretName=document.getElementById('secretName').value; secretIcon=document.getElementById('secretIcon').value; alert('تم حفظ المحادثة السرية ✅ - اكتب الرمز بالبحث: '+secretCode); }
-function renderChats(list){ list=list||chats; document.getElementById('chatList').innerHTML=list.map((c,i)=>`<div class="row" style="padding:8px;border-bottom:1px solid #eee;cursor:pointer" onclick="openChat(${chats.indexOf(c)})"><div class="avatar">${c.icon}</div><div style="flex:1"><b>${c.name}</b><div style="font-size:12px">${c.last}</div></div>${c.secret?'<span class="badge">سري</span>':''}</div>`).join(''); }
-function doSearch(){ let v=document.getElementById('searchBox').value.trim(); if(v===secretCode){ let secret={name:secretName,icon:secretIcon||"💬",last:"محادثة سرية - اشعار مخصص بدون اسم",secret:true}; renderChats([secret,...chats]); } else if(v==""){ renderChats(); } else { renderChats(chats.filter(c=>c.name.includes(v))); } }
-function openChat(i){ let c = document.getElementById('searchBox').value.trim()===secretCode && i===0 ? {name:secretName,icon:secretIcon||"💬",secret:true} : chats[i]; if(!c) return; current=c; document.getElementById('chatBox').classList.remove('hidden'); document.getElementById('chatName').innerText=c.name; document.getElementById('chatAvatar').innerText=c.icon; document.getElementById('messages').innerHTML=`<div class="msg other">هلا، هاي محادثة ${c.name} ${c.secret?'🔒 سرية - تختفي بعد الخروج':''}</div>`; }
-function closeChat(){ document.getElementById('chatBox').classList.add('hidden'); document.getElementById('searchBox').value=""; renderChats(); alert('طلعت من المحادثة السرية - اختفت ✅ - اكتب الرمز مرة ثانية لترجع'); }
-function sendMsg(){ let v=document.getElementById('msgInput').value; if(!v) return; document.getElementById('messages').innerHTML+=`<div class="msg me">${v} <span style="font-size:10px">⋮ تعديل / حذف / ❤️ / نسخ / رد</span></div>`; document.getElementById('msgInput').value=""; }
-function addPost(){ let v=document.getElementById('postText').value; if(!v) return; document.getElementById('posts').innerHTML=`<div class="card">${v} <br>❤️ لايك | 💬 تعليق</div>`+document.getElementById('posts').innerHTML; document.getElementById('postText').value=""; }
-</script>
-</body>
-</html>
+let secretCode="1234",secretName="انا وياك ❤️",secretIcon="❤️";
+let chats=[{name:"نور",icon:"😍",last:"هلا بيك",status:"متصل الآن 🟢"},{name:"علي",icon:"🔥",last:"تمام",status:"آخر ظهور اليوم 9:41 م"},{name:"سارة",icon:"🌹",last:"🌹",status:"آخر ظهور منذ 5 دقائق"}];
+function sendCode(){let e=document.getElementById('lEmail').value,p=document.getElementById('lPass').value,n=document.getElementById('lName').value; if(!n){document.getElementById('loginMsg').innerText='اكتب اسمك';return} if(!e.includes('@')){document.getElementById('loginMsg').innerText='اكتب بريد صحيح';return} if(p.length<8){document.getElementById('loginMsg').innerText='كلمة السر لازم 8 احرف';return} document.getElementById('codeBox').style.display='block'; document.getElementById('loginMsg').innerText='تم ارسال كلمة سر 123456 لبريدك - تأكد انك صاحب البريد 📧';}
+function verifyLogin(){ if(document.getElementById('codeInput').value!="123456"){document.getElementById('loginMsg').innerText='الكود غلط - انت مو صاحب البريد';return} if(!document.getElementById('robot').checked){document.getElementById('loginMsg').innerText='لازم تأكد انك انسان - دوس انا لست روبوت';return} document.getElementById('loginPage').classList.remove('active'); document.getElementById('app').style.display='block'; let n=document.getElementById('lName').value; document.getElementById('myName').innerText=n; document.getElementById('topName').innerText=n; go('stories'); renderChats(); }
+function go(p){['stories','chats','contacts','profile','settings'].forEach(x=>{document.getElementById('page-'+x).classList.remove('active'); document.getElementById('btn-'+x).classList.remove('on');}); document.getElementById('page-'+p).classList.add('active'); document.getElementById('btn-'+p).classList.add('on'); window.scrollTo(0,0);}
+function toggleBg(){document.body.classList.toggle('dark');} function setTheme(t){document.body.classList.remove('luxe');}
+function viewStory(el,name){el.classList.add('seen'); document.getElementById('storyView').style.display='block'; document.getElementById('storyName').innerText=name; document.getElementById('storyIcon').innerText=name=='سارة'?'😍':name=='احمد'?'😎':'😍'; document.getElementById('interBox').style.display='none';}
+function showInteractions(){document.getElementById('interBox').style.display='block';}
+function saveSecret(){secretCode=document.getElementById('secretCode').value; secretName=document.getElementById('secretName').value; secretIcon=document.getElementById('secretIcon').value; alert('تم حفظ السرية ✅');}
+function renderChats(list){list=list||chats; document.getElementById('chatList').innerHTML=list.map((c,i)=>`<div class="row" style="padding:10px;border-bottom:1px solid #eee" onclick="openChat(${chats.indexOf(c)})"><div class="avatar">${c.icon}</div><div style="flex:1"><b>${c.name}</b><div style="font-size:12px;color:#888">${c.last}</div></div><span style="font-size:12px;color:#888">9:41 م</span></div>`).join('');}
+function doSearch(){let v=document.getElementById('searchBox').value.trim(); if(v===secretCode)renderChats([{name:secretName,icon:secretIcon||"💬",last:"سرية",status:"سرية 🔒"},...chats]); else if(v=="")renderChats(); else renderChats(chats.filter(c=>c.name.includes(v)));}
+function openChat(i){let c=document.getElementById('searchBox').value.trim()===secretCode&&i===0?{name:secretName,icon:secretIcon||"💬",status:"سرية 🔒",secret:true}:chats[i]; document.getElementById('chatBox').style.display='block'; document.getElementById('chatName').innerText=c.name; document.getElementById('chatAvatar').innerText=c.icon; document.getElementById('chatStatus').innerText=c.status; document.getElementById('messages').innerHTML=`<div class="msg other">هلا - ${c.name}</div>`;}
+function closeChat(){document.getElementById('chatBox').style.display='none'; document.getElementById('searchBox').value=""; renderChats();}
+function sendMsg(){let v=document.getElementById('msgInput').value; if(!v)return; document.getElementById('messages').innerHTML+=`<div class="msg me">${v}</div>`; document.getElementById('msgInput').value="";}
+</script></body></html>
